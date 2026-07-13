@@ -1,0 +1,722 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agency Dashboard — EcoClean Nigeria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="ecoclean-data.js"></script>
+</head>
+<body class="bg-emerald-50 min-h-screen text-slate-700 antialiased">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full bg-gradient-to-b from-slate-950 via-slate-900 to-emerald-950 text-white shadow-xl transition-transform duration-300 ease-in-out md:translate-x-0">
+    <div class="px-6 py-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-emerald-500 flex items-center justify-center font-black text-white text-sm">EC</div>
+        <div>
+          <p class="text-white font-black text-sm m-0">EcoClean</p>
+          <p class="text-white/60 text-xs m-0">Agency Portal</p>
+        </div>
+      </div>
+      <div class="border-t border-white/10 my-4"></div>
+      <div id="agencyNameSidebar" class="text-sm text-white/70 font-semibold px-1"></div>
+      <div id="agencyTypeSidebar" class="text-xs text-white/40 px-1 mt-1"></div>
+    </div>
+
+    <nav class="px-3 pb-6">
+      <button class="sidebar-link flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-white bg-white/15 font-semibold text-sm transition-colors duration-150 ease-in-out hover:bg-white/10" onclick="showPage('overview')">
+        <span>📊</span> Overview
+      </button>
+      <button class="sidebar-link flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-white/80 font-semibold text-sm transition-colors duration-150 ease-in-out hover:bg-white/10" onclick="showPage('reports')">
+        <span>📋</span> Assigned Reports
+      </button>
+      <button class="sidebar-link flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-white/80 font-semibold text-sm transition-colors duration-150 ease-in-out hover:bg-white/10" onclick="showPage('incoming')">
+        <span>📥</span> Incoming Requests
+      </button>
+      <button class="sidebar-link relative flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-white/80 font-semibold text-sm transition-colors duration-150 ease-in-out hover:bg-white/10" onclick="showPage('messages')">
+        <span>📬</span> Messages
+        <span id="msgDot" class="absolute right-4 top-3 hidden rounded-full bg-red-500 px-2.5 py-0.5 text-[10px] font-extrabold text-white text-center"></span>
+      </button>
+      <button class="sidebar-link flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-white/80 font-semibold text-sm transition-colors duration-150 ease-in-out hover:bg-white/10" onclick="showPage('resolved')">
+        <span>✅</span> Resolved Cases
+      </button>
+      <button class="sidebar-link flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-white/80 font-semibold text-sm transition-colors duration-150 ease-in-out hover:bg-white/10" onclick="showPage('profile')">
+        <span>🏢</span> Agency Profile
+      </button>
+      <div class="border-t border-white/10 my-3"></div>
+      <button class="sidebar-link flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-red-200 hover:text-white hover:bg-white/10" onclick="logout()">
+        <span>🚪</span> Log Out
+      </button>
+    </nav>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header id="topbar" class="sticky top-0 z-40 md:ml-64 bg-white border-b border-slate-200">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8">
+      <div class="flex items-center gap-4">
+        <button id="menuBtn" onclick="toggleSidebar()" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white p-2 text-xl text-slate-600 transition-colors duration-150 hover:bg-slate-50 md:hidden">☰</button>
+        <div>
+          <h1 id="pageTitle" class="text-lg font-black text-slate-900">Overview</h1>
+          <p id="pageSubtitle" class="text-xs text-slate-500">Welcome back to your agency dashboard</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button onclick="showPage('messages')" class="relative inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-xl text-slate-600 transition-colors duration-150 hover:bg-slate-100">
+          🔔
+          <span id="bellDot" class="absolute -right-1 -top-1 hidden rounded-full bg-red-500 px-2 text-[10px] font-extrabold text-white"></span>
+        </button>
+        <div id="topbarAvatar" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-sm font-black text-slate-900"></div>
+        <div class="text-right">
+          <p id="topbarName" class="font-semibold text-sm text-slate-900"></p>
+          <p id="topbarEmail" class="text-xs text-slate-500"></p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main id="mainContent" class="md:ml-64 px-4 py-6 md:px-8">
+
+    <!-- PAGE: OVERVIEW -->
+    <section id="page-overview">
+      <div class="mb-6 rounded-[28px] bg-gradient-to-br from-slate-950 via-emerald-900 to-emerald-500 p-6 text-white shadow-xl shadow-slate-900/10 sm:flex sm:items-center sm:justify-between sm:gap-6">
+        <div class="flex items-center gap-4">
+          <div id="welcomeAvatar" class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/30 bg-white/10 text-2xl font-black"></div>
+          <div>
+            <p class="text-sm text-white/70">Welcome back 👋</p>
+            <h2 id="welcomeName" class="mt-1 text-2xl font-black"></h2>
+            <p id="welcomeMeta" class="text-sm text-white/70"></p>
+          </div>
+        </div>
+        <div class="mt-4 text-right sm:mt-0">
+          <p class="text-xs text-white/70">Today</p>
+          <p id="todayDate" class="mt-1 text-sm font-semibold"></p>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <div class="rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Total Reports</p>
+          <p id="statTotal" class="mt-3 text-3xl font-black text-slate-900">0</p>
+        </div>
+        <div class="rounded-3xl border border-sky-100 bg-white p-5 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Ongoing</p>
+          <p id="statOngoing" class="mt-3 text-3xl font-black text-sky-700">0</p>
+        </div>
+        <div class="rounded-3xl border border-amber-100 bg-white p-5 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Pending</p>
+          <p id="statPending" class="mt-3 text-3xl font-black text-amber-700">0</p>
+        </div>
+        <div class="rounded-3xl border border-emerald-100 bg-white p-5 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Resolved</p>
+          <p id="statResolved" class="mt-3 text-3xl font-black text-emerald-700">0</p>
+        </div>
+        <div class="rounded-3xl border border-red-100 bg-white p-5 shadow-sm">
+          <p class="text-xs uppercase tracking-[0.18em] text-slate-400">Incoming</p>
+          <p id="statIncoming" class="mt-3 text-3xl font-black text-red-700">0</p>
+        </div>
+      </div>
+
+      <div class="mt-6 rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h3 class="text-base font-black text-slate-900">Recent Reports</h3>
+          <button class="inline-flex items-center rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition duration-150 hover:bg-emerald-700" onclick="showPage('reports')">View All →</button>
+        </div>
+        <div id="recentReports" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- PAGE: ASSIGNED REPORTS -->
+    <section id="page-reports" class="hidden">
+      <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 class="text-base font-black text-slate-900">Assigned Reports</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button class="tab-btn rounded-2xl bg-emerald-500 px-4 py-2 text-sm font-bold text-white shadow-sm transition duration-150" onclick="filterReports('all', this)">All</button>
+            <button class="tab-btn rounded-2xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-500 transition duration-150" onclick="filterReports('Ongoing', this)">Ongoing</button>
+            <button class="tab-btn rounded-2xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-500 transition duration-150" onclick="filterReports('Waiting for Approval', this)">Pending</button>
+            <button class="tab-btn rounded-2xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-500 transition duration-150" onclick="filterReports('Resolved', this)">Resolved</button>
+          </div>
+        </div>
+        <div id="reportsList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- PAGE: INCOMING -->
+    <section id="page-incoming" class="hidden">
+      <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+        <h3 class="mb-4 text-base font-black text-slate-900">Incoming Report Requests</h3>
+        <div id="incomingList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- PAGE: MESSAGES -->
+    <section id="page-messages" class="hidden">
+      <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 class="text-base font-black text-slate-900">Contact Requests</h3>
+            <p class="text-xs text-slate-500">Messages from citizens trying to reach your agency</p>
+          </div>
+          <button class="inline-flex items-center rounded-2xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-600 transition duration-150 hover:bg-slate-200" onclick="refreshMessages()">🔄 Refresh</button>
+        </div>
+        <div id="messagesList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- PAGE: RESOLVED -->
+    <section id="page-resolved" class="hidden">
+      <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+        <h3 class="mb-4 text-base font-black text-slate-900">Resolved Cases</h3>
+        <div id="resolvedList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- PAGE: PROFILE -->
+    <section id="page-profile" class="hidden">
+      <div class="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+        <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+          <h3 class="mb-4 text-base font-black text-slate-900">Agency Information</h3>
+          <div class="grid gap-4">
+            <div class="space-y-2">
+              <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Organization Name</label>
+              <input id="pf_name" class="w-full rounded-2xl border border-emerald-100 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            </div>
+            <div class="space-y-2">
+              <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Agency Type</label>
+              <select id="pf_type" class="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                <option value="government">Government Agency</option>
+                <option value="private">Private Contractor</option>
+                <option value="ngo">Non-Governmental Organization (NGO)</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">State</label>
+              <select id="pf_state" class="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                <option>Delta</option><option>Lagos</option><option>FCT Abuja</option><option>Kano</option>
+                <option>Rivers</option><option>Enugu</option><option>Oyo</option><option>Edo</option>
+                <option>Anambra</option><option>Kaduna</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Office Address</label>
+              <input id="pf_addr" class="w-full rounded-2xl border border-emerald-100 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            </div>
+            <div class="space-y-2">
+              <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Phone Number</label>
+              <input id="pf_phone" class="w-full rounded-2xl border border-emerald-100 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+            </div>
+            <div class="space-y-2">
+              <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Email</label>
+              <input id="pf_email" readonly class="w-full rounded-2xl border border-emerald-100 bg-slate-50 px-4 py-3 text-sm text-slate-500 outline-none" />
+            </div>
+            <button class="mt-1 inline-flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition duration-150 hover:bg-emerald-700" onclick="saveProfile()">💾 Save Changes</button>
+          </div>
+        </div>
+
+        <div class="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-sm">
+          <h3 class="mb-4 text-base font-black text-slate-900">Account Stats</h3>
+          <div class="grid gap-3">
+            <div class="flex items-center justify-between rounded-2xl bg-emerald-50 p-4 text-sm text-slate-700">
+              <span>Member Since</span>
+              <span class="font-bold text-slate-900">Jun 2026</span>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-emerald-50 p-4 text-sm text-slate-700">
+              <span>Reports Handled</span>
+              <span id="pfStatTotal" class="font-bold text-slate-900"></span>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-emerald-50 p-4 text-sm text-slate-700">
+              <span>Resolved</span>
+              <span id="pfStatResolved" class="font-bold text-emerald-700"></span>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-emerald-50 p-4 text-sm text-slate-700">
+              <span>Avg. Response Time</span>
+              <span class="font-bold text-slate-900">1.8 days</span>
+            </div>
+          </div>
+          <div class="mt-5 rounded-3xl border border-amber-100 bg-amber-50 p-4 text-sm text-amber-900">
+            🔒 To change your password or email, please contact EcoClean support.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="md:ml-64 bg-slate-950 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-sm md:flex-row md:items-center md:justify-between md:px-8">
+      <div>
+        <p class="font-black text-base">EcoClean Nigeria</p>
+        <p class="text-xs text-white/60">Agency portal for cleaner communities.</p>
+      </div>
+      <p class="text-xs text-white/40">2026 EcoClean Nigeria. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL: Update Status -->
+  <div id="statusModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="mb-4 flex items-center justify-between">
+        <h3 class="text-lg font-black text-slate-900">Update Report Status</h3>
+        <button onclick="closeStatusModal()" class="text-slate-500 transition hover:text-slate-700">✕</button>
+      </div>
+      <p id="smReportId" class="mb-4 text-sm text-slate-500"></p>
+      <div class="mb-4 space-y-2">
+        <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">New Status</label>
+        <select id="smStatus" class="w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+          <option value="Ongoing">Ongoing</option>
+          <option value="Waiting for Approval">Waiting for Approval</option>
+          <option value="Assigned">Assigned</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+      </div>
+      <div class="mb-5 space-y-2">
+        <label class="block text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Notes (optional)</label>
+        <textarea id="smNote" rows="3" class="w-full resize-none rounded-2xl border border-emerald-100 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Add a note about this update…"></textarea>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <button class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-bold text-slate-700 transition duration-150 hover:bg-slate-200" onclick="closeStatusModal()">Cancel</button>
+        <button class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition duration-150 hover:bg-emerald-700" onclick="confirmStatusUpdate()">✅ Update Status</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Report Detail -->
+  <div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="mb-4 flex items-center justify-between">
+        <h3 id="dmTitle" class="text-lg font-black text-slate-900"></h3>
+        <button onclick="closeDetailModal()" class="text-slate-500 transition hover:text-slate-700">✕</button>
+      </div>
+      <div id="dmBody" class="space-y-3"></div>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        <button class="inline-flex items-center justify-center rounded-2xl bg-sky-600 px-4 py-3 text-sm font-bold text-white transition duration-150 hover:bg-sky-700" onclick="openStatusFromDetail()">📝 Update Status</button>
+        <button class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-bold text-slate-700 transition duration-150 hover:bg-slate-200" onclick="closeDetailModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Accept/Reject Incoming -->
+  <div id="incomingModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="max-w-lg rounded-[28px] bg-white p-6 text-center shadow-2xl">
+      <div id="imIcon" class="mb-3 text-5xl"></div>
+      <h3 id="imTitle" class="mb-2 text-xl font-black text-slate-900"></h3>
+      <p id="imBody" class="mb-6 text-sm leading-6 text-slate-600"></p>
+      <button class="inline-flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition duration-150 hover:bg-emerald-700" onclick="closeIncomingModal()">OK — Close</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Message Detail -->
+  <div id="msgModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-[28px] bg-white p-6 shadow-2xl">
+      <div class="mb-4 flex items-center justify-between">
+        <h3 class="text-lg font-black text-slate-900">Contact Request</h3>
+        <button onclick="closeMsgModal()" class="text-slate-500 transition hover:text-slate-700">✕</button>
+      </div>
+      <div id="msgModalBody" class="space-y-3"></div>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        <button class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition duration-150 hover:bg-emerald-700" onclick="markMsgResponded()">✅ Mark as Responded</button>
+        <button class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-bold text-slate-700 transition duration-150 hover:bg-slate-200" onclick="closeMsgModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var role = localStorage.getItem('eco_role');
+    if (role !== 'agency') {
+      // window.location.href = 'signup.html';
+    }
+
+    var agencyName  = localStorage.getItem('eco_agency_name')  || 'GreenForce Delta Agency';
+    var agencyType  = localStorage.getItem('eco_agency_type')  || 'government';
+    var agencyState = localStorage.getItem('eco_agency_state') || 'Delta';
+    var agencyEmail = localStorage.getItem('eco_email')        || 'agency@demo.com';
+    var agencyPhone = localStorage.getItem('eco_agency_phone') || '08012345678';
+    var agencyAddr  = localStorage.getItem('eco_agency_address')|| '12, Govt Secretariat, Asaba';
+
+    function agencyTypeLabel(type) {
+      if (type === 'ngo') return 'Non-Governmental Organization (NGO)';
+      return type === 'government' ? 'Government Agency' : 'Private Contractor';
+    }
+    document.getElementById('agencyNameSidebar').textContent = agencyName;
+    document.getElementById('agencyTypeSidebar').textContent = agencyTypeLabel(agencyType);
+    document.getElementById('welcomeName').textContent = agencyName;
+    document.getElementById('welcomeMeta').textContent = agencyTypeLabel(agencyType) + ' - ' + agencyState;
+    document.getElementById('topbarName').textContent  = agencyName;
+    document.getElementById('topbarEmail').textContent = agencyEmail;
+    document.getElementById('todayDate').textContent   = new Date().toLocaleDateString('en-NG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+    function getInitials(name) {
+      if (!name) return 'EC';
+      var words = name.trim().split(/\s+/).filter(Boolean);
+      var letters = words.slice(0,2).map(function(w){ return w[0]; }).join('');
+      return letters.toUpperCase() || 'EC';
+    }
+    document.getElementById('welcomeAvatar').textContent = getInitials(agencyName);
+    document.getElementById('topbarAvatar').textContent  = getInitials(agencyName);
+
+    document.getElementById('pf_name').value  = agencyName;
+    document.getElementById('pf_type').value  = agencyType;
+    document.getElementById('pf_state').value = agencyState;
+    document.getElementById('pf_addr').value  = agencyAddr;
+    document.getElementById('pf_phone').value = agencyPhone;
+    document.getElementById('pf_email').value = agencyEmail;
+
+    var REPORTS = [
+      {id:'EC-001', citizen:'Chidi Okeke',    loc:'Asaba, Delta',          issue:'Illegal dumping near school compound',    status:'Ongoing',              date:'Jun 3, 2026',  priority:'High'},
+      {id:'EC-002', citizen:'Amaka Nwosu',    loc:'Warri, Delta',          issue:'Blocked drainage causing flooding',       status:'Waiting for Approval', date:'Jun 7, 2026',  priority:'Medium'},
+      {id:'EC-003', citizen:'Tunde Bello',    loc:'Ibusa, Delta',          issue:'Waste pile at residential estate gate',   status:'Assigned',             date:'Jun 8, 2026',  priority:'Medium'},
+      {id:'EC-004', citizen:'Ngozi Eze',      loc:'Asaba, Delta',          issue:'Industrial waste discharge into stream',  status:'Resolved',             date:'Jun 1, 2026',  priority:'High'},
+      {id:'EC-005', citizen:'Seun Adeyemi',   loc:'Ughelli, Delta',        issue:'Open defecation site near market',        status:'Ongoing',              date:'Jun 9, 2026',  priority:'High'},
+      {id:'EC-006', citizen:'Fatima Lawal',   loc:'Sapele, Delta',         issue:'Burning of hospital waste in open field', status:'Waiting for Approval', date:'Jun 10, 2026', priority:'High'},
+      {id:'EC-007', citizen:'Emeka Okafor',   loc:'Agbor, Delta',          issue:'Refuse heap blocking main road',          status:'Resolved',             date:'May 30, 2026', priority:'Low'},
+      {id:'EC-008', citizen:'Blessing Ogbu',  loc:'Asaba, Delta',          issue:'Uncollected waste for over 3 weeks',      status:'Assigned',             date:'Jun 11, 2026',  priority:'Medium'},
+    ];
+
+    var INCOMING = [
+      {id:'EC-INC-01', citizen:'Kemi Adebayo', loc:'Asaba, Delta',   issue:'Overflowing public bins at park',      date:'Jun 11, 2026'},
+      {id:'EC-INC-02', citizen:'Musa Ibrahim', loc:'Warri, Delta',   issue:'Dead animal on highway causing stench', date:'Jun 11, 2026'},
+      {id:'EC-INC-03', citizen:'Ada Okonkwo',  loc:'Abraka, Delta',  issue:'Chemical spill near residential area',  date:'Jun 10, 2026'},
+    ];
+
+    var currentEditId = null;
+    var currentDetailId = null;
+
+    function computeStats() {
+      var total    = REPORTS.length;
+      var ongoing  = REPORTS.filter(function(r){return r.status==='Ongoing';}).length;
+      var pending  = REPORTS.filter(function(r){return r.status==='Waiting for Approval';}).length;
+      var resolved = REPORTS.filter(function(r){return r.status==='Resolved';}).length;
+      var incoming = INCOMING.length;
+      document.getElementById('statTotal').textContent   = total;
+      document.getElementById('statOngoing').textContent  = ongoing;
+      document.getElementById('statPending').textContent  = pending;
+      document.getElementById('statResolved').textContent = resolved;
+      document.getElementById('statIncoming').textContent = incoming;
+      document.getElementById('pfStatTotal').textContent   = total;
+      document.getElementById('pfStatResolved').textContent = resolved;
+    }
+    computeStats();
+
+    function badgeHtml(status) {
+      var map = {
+        'Ongoing':              'bg-sky-100 text-sky-700',
+        'Waiting for Approval': 'bg-amber-100 text-amber-700',
+        'Assigned':             'bg-emerald-100 text-emerald-700',
+        'Resolved':             'bg-slate-100 text-slate-700'
+      };
+      var classes = map[status] || 'bg-slate-100 text-slate-700';
+      return '<span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ' + classes + '">' + status + '</span>';
+    }
+    function priorityBadge(p) {
+      var map = {High:'bg-red-100 text-red-700', Medium:'bg-amber-100 text-amber-700', Low:'bg-emerald-100 text-emerald-700'};
+      var classes = map[p] || 'bg-slate-100 text-slate-700';
+      return '<span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ' + classes + '">' + p + '</span>';
+    }
+
+    function reportRow(r, showUpdate) {
+      var upd = showUpdate ? '<button class="inline-flex items-center rounded-2xl bg-sky-600 px-4 py-2 text-sm font-bold text-white transition duration-150 hover:bg-sky-700" onclick="openStatus(\''+r.id+'\')">📝 Update</button>' : '';
+      return '<div id="row-'+r.id+'" class="flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-start md:justify-between">' +
+        '<div class="min-w-0 flex-1">' +
+          '<div class="mb-3 flex flex-wrap items-center gap-2">' +
+            '<span class="text-sm font-black text-slate-900">' + r.id + '</span>' +
+            badgeHtml(r.status) +
+            priorityBadge(r.priority) +
+          '</div>' +
+          '<p class="text-sm font-semibold text-slate-900 mb-2">' + r.issue + '</p>' +
+          '<p class="text-sm text-slate-500">👤 ' + r.citizen + ' · 📍 ' + r.loc + ' · 📅 ' + r.date + '</p>' +
+        '</div>' +
+        '<div class="flex flex-wrap gap-2">' +
+          '<button class="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-bold text-slate-700 transition duration-150 hover:bg-slate-200" onclick="openDetail(\''+r.id+'\')">👁️ View</button>' +
+          upd +
+        '</div>' +
+      '</div>';
+    }
+
+    function renderRecentReports() {
+      var html = '';
+      REPORTS.slice(0,5).forEach(function(r){ html += reportRow(r, true); });
+      document.getElementById('recentReports').innerHTML = html;
+    }
+
+    function renderAllReports(filter) {
+      var list = filter && filter !== 'all' ? REPORTS.filter(function(r){return r.status===filter;}) : REPORTS;
+      var html = '';
+      list.forEach(function(r){ html += reportRow(r, true); });
+      document.getElementById('reportsList').innerHTML = html || '<p class="text-center text-sm text-slate-500 py-10">No reports found.</p>';
+    }
+
+    function renderIncoming() {
+      var html = '';
+      INCOMING.forEach(function(r){
+        html += '<div class="flex flex-col gap-4 rounded-[28px] border border-amber-100 bg-amber-50 p-4 shadow-sm md:flex-row md:items-start md:justify-between">' +
+          '<div class="min-w-0 flex-1">' +
+            '<div class="mb-3 flex flex-wrap items-center gap-2">' +
+              '<span class="text-sm font-black text-slate-900">' + r.id + '</span>' +
+              '<span class="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-700">New</span>' +
+            '</div>' +
+            '<p class="text-sm font-semibold text-slate-900 mb-2">' + r.issue + '</p>' +
+            '<p class="text-sm text-slate-500">👤 ' + r.citizen + ' · 📍 ' + r.loc + ' · 📅 ' + r.date + '</p>' +
+          '</div>' +
+          '<div class="flex flex-wrap gap-2">' +
+            '<button class="inline-flex items-center rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition duration-150 hover:bg-emerald-700" onclick="acceptReport(\''+r.id+'\')">✅ Accept</button>' +
+            '<button class="inline-flex items-center rounded-2xl bg-red-500 px-4 py-2 text-sm font-bold text-white transition duration-150 hover:bg-red-600" onclick="rejectReport(\''+r.id+'\')">✕ Reject</button>' +
+          '</div>' +
+        '</div>';
+      });
+      document.getElementById('incomingList').innerHTML = html || '<p class="text-center text-sm text-slate-500 py-10">No incoming requests right now.</p>';
+    }
+
+    function renderResolved() {
+      var list = REPORTS.filter(function(r){return r.status==='Resolved';});
+      var html = '';
+      list.forEach(function(r){ html += reportRow(r, false); });
+      document.getElementById('resolvedList').innerHTML = html || '<p class="text-center text-sm text-slate-500 py-10">No resolved cases yet.</p>';
+    }
+
+    renderRecentReports();
+    renderAllReports('all');
+    renderIncoming();
+    renderResolved();
+    renderMessages();
+
+    var MSG_KEY = 'eco_agency_messages';
+
+    function getStoredMessages() {
+      try { var raw = localStorage.getItem(MSG_KEY); return raw ? JSON.parse(raw) : []; }
+      catch(e) { return []; }
+    }
+    function saveStoredMessages(list) { localStorage.setItem(MSG_KEY, JSON.stringify(list)); }
+
+    function seedSampleMessages() {
+      var all = getStoredMessages();
+      var hasSeed = all.some(function(m){ return m.seed === true; });
+      if (hasSeed) return;
+      var samples = [
+        {id:'MSG-'+Date.now()+'-1', agency:agencyName, citizen:'Blessing Adaeze', method:'call',      reportId:'EC-008', text:'Requested a call back regarding uncollected waste for 3 weeks.', time:'Jun 11, 2026 · 9:14 AM', status:'New', seed:true},
+        {id:'MSG-'+Date.now()+'-2', agency:agencyName, citizen:'Ifeanyi Okoro',   method:'whatsapp',  reportId:'EC-003', text:'Sent a WhatsApp message asking for an update on the waste pile near the estate gate.', time:'Jun 11, 2026 · 11:02 AM', status:'New', seed:true},
+        {id:'MSG-'+Date.now()+'-3', agency:agencyName, citizen:'Grace Imoh',      method:'complaint', reportId:'EC-006', text:'Filed a formal complaint about the burning of hospital waste in an open field.', time:'Jun 10, 2026 · 4:47 PM', status:'Responded', seed:true},
+        {id:'MSG-'+Date.now()+'-4', agency:agencyName, citizen:'David Etim',      method:'email',     reportId:'EC-002', text:'Sent an email asking when the drainage clearing will be completed.', time:'Jun 9, 2026 · 8:30 AM', status:'New', seed:true},
+      ];
+      saveStoredMessages(all.concat(samples));
+    }
+    seedSampleMessages();
+
+    var METHOD_ICON = {call:'📞', whatsapp:'💬', livechat:'🖥️', complaint:'📋', email:'✉️'};
+    var METHOD_LABEL = {call:'Call Request', whatsapp:'WhatsApp', livechat:'Live Chat', complaint:'Complaint', email:'Email'};
+    var currentMsgId = null;
+
+    function getMyMessages() {
+      var all = getStoredMessages();
+      var mine = all.filter(function(m){ return m.agency === agencyName; });
+      var others = all.filter(function(m){ return m.agency !== agencyName && m.seed !== true; });
+      return mine.concat(others);
+    }
+
+    function renderMessages() {
+      var list = getMyMessages().slice().reverse();
+      var html = '';
+      if (list.length === 0) {
+        html = '<p class="text-center text-sm text-slate-500 py-10">No messages yet. Citizens who contact your agency will appear here.</p>';
+      } else {
+        list.forEach(function(m){
+          var isNew = m.status === 'New';
+          html += '<div class="group cursor-pointer rounded-[28px] border p-4 shadow-sm transition hover:border-slate-300 '+(isNew?'bg-amber-50 border-amber-100':'bg-slate-50 border-slate-200')+'" onclick="openMsg(\''+m.id+'\')">' +
+            '<div class="flex flex-col gap-3 sm:flex-row sm:items-start">' +
+              '<div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-xl shadow-sm">' + (METHOD_ICON[m.method]||'📩') + '</div>' +
+              '<div class="min-w-0 flex-1">' +
+                '<div class="mb-2 flex flex-wrap items-center gap-2">' +
+                  '<span class="text-sm font-black text-slate-900">'+m.citizen+'</span>' +
+                  '<span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] '+(isNew?'bg-red-100 text-red-700':'bg-slate-100 text-slate-700')+'">'+m.status+'</span>' +
+                  '<span class="inline-flex items-center gap-1 rounded-full bg-sky-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-700">'+METHOD_LABEL[m.method]+'</span>' +
+                '</div>' +
+                '<p class="text-sm text-slate-600 mb-2">'+m.text+'</p>' +
+                '<p class="text-sm text-slate-500">📂 '+m.reportId+' · 🕐 '+m.time+'</p>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        });
+      }
+      document.getElementById('messagesList').innerHTML = html;
+      updateMsgBadge();
+    }
+
+    function updateMsgBadge() {
+      var newCount = getMyMessages().filter(function(m){ return m.status === 'New'; }).length;
+      var sidebarDot = document.getElementById('msgDot');
+      var bellDot    = document.getElementById('bellDot');
+      if (newCount > 0) {
+        sidebarDot.textContent = newCount;
+        sidebarDot.classList.remove('hidden');
+        bellDot.textContent    = newCount;
+        bellDot.classList.remove('hidden');
+      } else {
+        sidebarDot.classList.add('hidden');
+        bellDot.classList.add('hidden');
+      }
+    }
+
+    function openMsg(id) {
+      currentMsgId = id;
+      var m = getStoredMessages().find(function(x){ return x.id === id; });
+      if (!m) return;
+      document.getElementById('msgModalBody').innerHTML =
+        dRow('👤 Citizen', m.citizen) +
+        dRow('📞 Method', METHOD_LABEL[m.method]) +
+        dRow('📂 Report ID', m.reportId) +
+        dRow('🕐 Received', m.time) +
+        dRow('📊 Status', m.status) +
+        '<div class="rounded-2xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-slate-700 leading-6">"'+m.text+'"</div>';
+      document.getElementById('msgModal').classList.remove('hidden');
+    }
+    function closeMsgModal() { document.getElementById('msgModal').classList.add('hidden'); }
+    function markMsgResponded() {
+      var all = getStoredMessages();
+      var m = all.find(function(x){ return x.id === currentMsgId; });
+      if (m) { m.status = 'Responded'; saveStoredMessages(all); }
+      closeMsgModal();
+      renderMessages();
+    }
+    function refreshMessages() { renderMessages(); }
+    function markAllSeen() { updateMsgBadge(); }
+
+    var pages = ['overview','reports','incoming','messages','resolved','profile'];
+    function showPage(name) {
+      pages.forEach(function(p){
+        document.getElementById('page-'+p).classList.toggle('hidden', p !== name);
+      });
+      document.querySelectorAll('.sidebar-link').forEach(function(el,i){
+        var active = pages[i] === name;
+        el.classList.toggle('bg-white/15', active);
+        el.classList.toggle('text-white', active);
+        el.classList.toggle('text-white/80', !active);
+      });
+      var titles = {
+        overview:'Overview', reports:'Assigned Reports', incoming:'Incoming Requests',
+        messages:'Messages', resolved:'Resolved Cases', profile:'Agency Profile'
+      };
+      var subs = {
+        overview:'Your dashboard at a glance', reports:'All reports assigned to your agency',
+        incoming:'New report requests awaiting your response', messages:'Contact requests from citizens',
+        resolved:'Cases your agency has closed', profile:'Manage your agency information'
+      };
+      document.getElementById('pageTitle').textContent    = titles[name] || name;
+      document.getElementById('pageSubtitle').textContent = subs[name] || '';
+      document.getElementById('sidebar').classList.remove('translate-x-0');
+      if (name === 'messages') { renderMessages(); markAllSeen(); }
+    }
+
+    function filterReports(val, btn) {
+      renderAllReports(val);
+      document.querySelectorAll('.tab-btn').forEach(function(b){
+        b.classList.remove('bg-emerald-500','text-white','shadow-sm');
+        b.classList.add('bg-slate-100','text-slate-500');
+      });
+      btn.classList.remove('bg-slate-100','text-slate-500');
+      btn.classList.add('bg-emerald-500','text-white','shadow-sm');
+    }
+
+    function openStatus(id) {
+      currentEditId = id;
+      var r = REPORTS.find(function(x){return x.id===id;});
+      document.getElementById('smReportId').textContent = id + ' · ' + r.issue;
+      document.getElementById('smStatus').value = r.status;
+      document.getElementById('smNote').value = '';
+      document.getElementById('statusModal').classList.remove('hidden');
+    }
+    function closeStatusModal() { document.getElementById('statusModal').classList.add('hidden'); }
+    function confirmStatusUpdate() {
+      var newStatus = document.getElementById('smStatus').value;
+      var r = REPORTS.find(function(x){return x.id===currentEditId;});
+      if (r) { r.status = newStatus; }
+      closeStatusModal();
+      computeStats();
+      renderRecentReports();
+      renderAllReports('all');
+      renderResolved();
+      alert('✅ Report ' + currentEditId + ' updated to: ' + newStatus);
+    }
+
+    function openDetail(id) {
+      currentDetailId = id;
+      var r = REPORTS.find(function(x){return x.id===id;}) || INCOMING.find(function(x){return x.id===id;});
+      if (!r) return;
+      document.getElementById('dmTitle').textContent = r.id;
+      document.getElementById('dmBody').innerHTML =
+        dRow('🗂️ Issue',    r.issue) +
+        dRow('👤 Citizen',  r.citizen) +
+        dRow('📍 Location', r.loc) +
+        dRow('📅 Date',     r.date) +
+        (r.status   ? dRow('📊 Status',   badgeHtml(r.status)) : '') +
+        (r.priority ? dRow('🚦 Priority', priorityBadge(r.priority)) : '');
+      document.getElementById('detailModal').classList.remove('hidden');
+    }
+    function dRow(label,val){
+      return '<div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">' +
+        '<span class="text-xs font-semibold uppercase tracking-[0.17em] text-slate-500">' + label + '</span>' +
+        '<span class="text-sm font-black text-slate-900">' + val + '</span>' +
+      '</div>';
+    }
+    function closeDetailModal() { document.getElementById('detailModal').classList.add('hidden'); }
+    function openStatusFromDetail() { closeDetailModal(); openStatus(currentDetailId); }
+
+    function acceptReport(id) {
+      var r = INCOMING.find(function(x){return x.id===id;});
+      if (!r) return;
+      REPORTS.unshift({id:r.id, citizen:r.citizen, loc:r.loc, issue:r.issue, status:'Assigned', date:r.date, priority:'Medium'});
+      INCOMING = INCOMING.filter(function(x){return x.id!==id;});
+      computeStats(); renderRecentReports(); renderAllReports('all'); renderIncoming();
+      document.getElementById('imIcon').textContent  = '✅';
+      document.getElementById('imTitle').textContent = 'Report Accepted';
+      document.getElementById('imBody').textContent  = 'Report ' + id + ' has been accepted and added to your assigned reports. The citizen will be notified.';
+      document.getElementById('incomingModal').classList.remove('hidden');
+    }
+    function rejectReport(id) {
+      INCOMING = INCOMING.filter(function(x){return x.id!==id;});
+      computeStats(); renderIncoming();
+      document.getElementById('imIcon').textContent  = '❌';
+      document.getElementById('imTitle').textContent = 'Report Rejected';
+      document.getElementById('imBody').textContent  = 'Report ' + id + ' has been declined. The citizen will be notified to try another agency.';
+      document.getElementById('incomingModal').classList.remove('hidden');
+    }
+    function closeIncomingModal() { document.getElementById('incomingModal').classList.add('hidden'); }
+
+    function saveProfile() {
+      var n = document.getElementById('pf_name').value.trim();
+      if (!n) { alert('Please enter your organization name.'); return; }
+      localStorage.setItem('eco_agency_name',    n);
+      localStorage.setItem('eco_agency_type',    document.getElementById('pf_type').value);
+      localStorage.setItem('eco_agency_state',   document.getElementById('pf_state').value);
+      localStorage.setItem('eco_agency_address', document.getElementById('pf_addr').value.trim());
+      localStorage.setItem('eco_agency_phone',   document.getElementById('pf_phone').value.trim());
+      agencyName = n;
+      agencyType = document.getElementById('pf_type').value;
+      document.getElementById('agencyNameSidebar').textContent = n;
+      document.getElementById('agencyTypeSidebar').textContent = agencyTypeLabel(agencyType);
+      document.getElementById('welcomeName').textContent = n;
+      document.getElementById('welcomeMeta').textContent = agencyTypeLabel(agencyType) + ' - ' + document.getElementById('pf_state').value;
+      document.getElementById('topbarName').textContent  = n;
+      document.getElementById('welcomeAvatar').textContent = getInitials(n);
+      document.getElementById('topbarAvatar').textContent  = getInitials(n);
+      alert('Profile saved successfully!');
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('translate-x-0');
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to log out?')) {
+        localStorage.removeItem('eco_role');
+        localStorage.removeItem('eco_email');
+        window.location.href = 'signup.html';
+      }
+    }
+    ecoApplySharedUI();
+  </script>
+</body>
+</html>

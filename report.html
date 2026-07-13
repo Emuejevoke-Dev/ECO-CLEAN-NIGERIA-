@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Log Report | EcoClean Nigeria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="ecoclean-data.js"></script>
+  <style>
+    /* Minimal styles - only what Tailwind can't handle */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    * { box-sizing:border-box; font-family:'Inter',system-ui,sans-serif; margin:0; padding:0; }
+    
+    /* Pulse animation */
+    .pulse { width:8px;height:8px;border-radius:50%;background:#34d399;display:inline-block;animation:pa 1.8s ease-in-out infinite; }
+    @keyframes pa { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.6);opacity:0.4;} }
+    
+    /* Step dots */
+    .step-dot { width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);flex-shrink:0; }
+    .step-dot.done { background:#10b981; }
+    .step-dot.active { background:#fbbf24; box-shadow:0 0 0 4px rgba(251,191,36,0.2); }
+    
+    /* Toggle visibility */
+    .off { display:none !important; }
+    .photo-preview.show { display:flex !important; }
+    
+    /* Modal overlay - requires fixed positioning */
+    .overlay { position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:16px;z-index:300; }
+    .mbox { background:#0a2e22;border:1px solid rgba(255,255,255,0.15);border-radius:24px;width:100%;max-width:440px;padding:30px; }
+    
+    /* Photo preview inline styles kept minimal */
+    .photo-preview-text { font-size:13px; color:rgba(255,255,255,0.5); }
+  </style>
+</head>
+<body class="bg-[linear-gradient(160deg,#021a12_0%,#064e3b_40%,#065f46_70%,#047857_100%)] bg-fixed min-h-screen text-white">
+
+<!-- NAV -->
+<nav class="bg-[rgba(2,26,18,0.88)] border-b border-white/10 sticky top-0 z-50 px-7 py-3.5 grid grid-cols-[auto_1fr_auto] items-center gap-3.5 max-sm:grid-cols-[1fr_auto] max-sm:px-5">
+  <div class="flex items-center gap-2.5 min-w-max">
+    <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 w-9 h-9 rounded-lg flex items-center justify-center font-black text-xs text-white">EC</div>
+    <span class="font-black text-base">EcoClean <span class="text-emerald-300">Nigeria</span></span>
+  </div>
+  <div class="flex items-center justify-center gap-4.5 flex-wrap">
+    <a href="Index.html" class="px-3.5 py-2 rounded-lg text-xs font-black uppercase tracking-wider text-white/60 hover:bg-white/10 transition-all duration-150 no-underline">Home</a>
+    <a href="track.html" class="px-3.5 py-2 rounded-lg text-xs font-black uppercase tracking-wider text-white/60 hover:bg-white/10 transition-all duration-150 no-underline">Track</a>
+    <a href="report.html" class="px-3.5 py-2 rounded-lg text-xs font-black uppercase tracking-wider bg-emerald-500 text-white transition-all duration-150 no-underline">Report</a>
+    <a href="profile.html" class="px-3.5 py-2 rounded-lg text-xs font-black uppercase tracking-wider text-white/60 hover:bg-white/10 transition-all duration-150 no-underline">Profile</a>
+  </div>
+  <div class="flex items-center justify-end min-w-[150px]">
+    <div class="text-right">
+      <p id="navName" data-eco-full-name class="text-xs font-black max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis"></p>
+      <p class="text-xs font-black uppercase tracking-wider text-white/40">Citizen</p>
+    </div>
+    <div id="navAvatar" class="w-9.5 h-9.5 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-[0_4px_14px_rgba(16,185,129,0.35)] flex items-center justify-center font-black text-sm text-white ml-2.5"></div>
+  </div>
+</nav>
+
+<!-- HERO STRIP -->
+<div class="px-7 pt-8 max-w-3xl mx-auto max-sm:px-5">
+  <div class="inline-flex items-center gap-3.5 bg-emerald-500/15 border border-emerald-500/25 text-emerald-300 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">
+    <span class="pulse inline-block w-2 h-2 rounded-full bg-emerald-300"></span> Submit Environmental Report
+  </div>
+  <h1 class="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight mb-2">Log Environmental Incident</h1>
+  <p class="text-base text-white/50 mb-8">Fill in the details below. A verified agency in your area will be assigned to your case.</p>
+
+  <!-- STEP INDICATOR -->
+  <div class="flex items-center justify-center gap-2.5 mb-0">
+    <div class="step-dot active w-2.5 h-2.5 rounded-full bg-yellow-400 flex-shrink-0" id="s1"></div>
+    <div class="w-6 h-0.5 bg-white/15"></div>
+    <div class="step-dot w-2.5 h-2.5 rounded-full bg-white/20 flex-shrink-0" id="s2"></div>
+    <div class="w-6 h-0.5 bg-white/15"></div>
+    <div class="step-dot w-2.5 h-2.5 rounded-full bg-white/20 flex-shrink-0" id="s3"></div>
+    <span class="text-xs font-black text-white/45 uppercase tracking-widest ml-2.5">Step <span id="stepNum">1</span> of 3</span>
+  </div>
+</div>
+
+<!-- MAIN FORM -->
+<main class="px-7 py-12 max-sm:px-5 max-sm:py-8">
+  <div class="bg-white/10 border border-white/15 rounded-3xl p-10 shadow-2xl max-w-2xl mx-auto max-sm:p-6">
+
+    <!-- FORM -->
+    <div id="formContainer">
+
+      <!-- STEP 1: LOCATION -->
+      <div id="step1Panel">
+        <h2 class="text-2xl font-black tracking-tight mb-2">Location Details</h2>
+        <p class="text-base text-white/50 mb-6">Tell us where the incident is happening.</p>
+
+        <div class="grid grid-cols-2 gap-3.5 mb-3.5 max-sm:grid-cols-1">
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">State *</label>
+            <select id="stateSelect" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium cursor-pointer transition-all duration-150 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] [&>option]:bg-emerald-800 [&>option]:text-white">
+              <option value="" disabled selected hidden>  Select State  </option>
+            </select>
+            <p id="err_state" class="text-xs text-red-400 mt-1.5 hidden">Please select a state.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Local Government Area *</label>
+            <select id="lgaSelect" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium cursor-pointer transition-all duration-150 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] [&>option]:bg-emerald-800 [&>option]:text-white">
+              <option value="">  Choose LGA  </option>
+            </select>
+            <p id="err_lga" class="text-xs text-red-400 mt-1.5 hidden">Please select an LGA.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3.5 mb-3.5 max-sm:grid-cols-1">
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Exact Address / Landmark *</label>
+            <input id="rep_addr" type="text" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium outline-none transition-all duration-150 placeholder:text-white/30 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] focus:bg-white/10" placeholder="e.g. Behind Shoprite, Asaba"/>
+            <p id="err_addr" class="text-xs text-red-400 mt-1.5 hidden">Please enter the address.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Postal Code</label>
+            <input id="rep_postal" type="text" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium outline-none transition-all duration-150 placeholder:text-white/30 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] focus:bg-white/10" placeholder="e.g. 100001"/>
+          </div>
+        </div>
+
+        <button onclick="goStep(2)" class="w-full py-3.5 rounded-2xl font-black text-base text-white border-none cursor-pointer mt-6 bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-[0_8px_28px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 hover:shadow-[0_12px_36px_rgba(16,185,129,0.5)] active:scale-[0.98] transition-all duration-150">Continue → Incident Details</button>
+      </div>
+
+      <!-- STEP 2: INCIDENT -->
+      <div id="step2Panel" class="off">
+        <h2 class="text-2xl font-black tracking-tight mb-2">Incident Details</h2>
+        <p class="text-base text-white/50 mb-6">Describe what you witnessed as clearly as possible.</p>
+
+        <div class="grid grid-cols-2 gap-3.5 mb-3.5 max-sm:grid-cols-1">
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Incident Category *</label>
+            <select id="rep_cat" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium cursor-pointer transition-all duration-150 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] [&>option]:bg-emerald-800 [&>option]:text-white">
+              <option value="">  Select Category  </option>
+              <option>Illegal Dumping</option>
+              <option>Blocked Drainage</option>
+              <option>Air Pollution</option>
+              <option>Water Contamination</option>
+              <option>Industrial Waste Discharge</option>
+              <option>Open Burning</option>
+              <option>Noise Pollution</option>
+              <option>Soil Contamination</option>
+              <option>Dead Animal / Carcass</option>
+              <option>Sewage Overflow</option>
+              <option>Other</option>
+            </select>
+            <p id="err_cat" class="text-xs text-red-400 mt-1.5 hidden">Please select a category.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Severity Level *</label>
+            <select id="rep_sev" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium cursor-pointer transition-all duration-150 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] [&>option]:bg-emerald-800 [&>option]:text-white">
+              <option value="">  Select Severity  </option>
+              <option value="Low">  Low   Minor, not urgent</option>
+              <option value="Medium">  Medium   Needs attention</option>
+              <option value="High">  High   Serious, urgent</option>
+              <option value="Critical">  Critical   Immediate danger</option>
+            </select>
+            <p id="err_sev" class="text-xs text-red-400 mt-1.5 hidden">Please select severity.</p>
+          </div>
+        </div>
+
+        <div class="mb-3.5">
+          <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Description of Incident *</label>
+          <textarea id="rep_desc" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium outline-none transition-all duration-150 placeholder:text-white/30 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] focus:bg-white/10 resize-y" rows="5" placeholder="Describe what you see in detail. Include any smells, colours, size of the waste, how long it has been there, whether there are health risks etc "></textarea>
+          <p id="err_desc" class="text-xs text-red-400 mt-1.5 hidden">Please describe the incident.</p>
+        </div>
+
+        <div class="mb-3.5">
+          <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Have you reported this before?</label>
+          <select id="rep_prev" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium cursor-pointer transition-all duration-150 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] [&>option]:bg-emerald-800 [&>option]:text-white">
+            <option value="no">No   this is my first report</option>
+            <option value="yes">Yes   I reported it before but it wasn't resolved</option>
+          </select>
+        </div>
+
+        <div class="flex gap-2.5 mt-6">
+          <button onclick="goStep(1)" class="flex-1 py-3.5 bg-white/10 border border-white/15 text-emerald-400 font-bold rounded-[10px] text-[13px] cursor-pointer hover:bg-white/15 active:scale-[0.98] transition-all duration-150">Back</button>
+          <button onclick="goStep(3)" class="flex-[2] py-3.5 rounded-2xl font-black text-base text-white border-none cursor-pointer bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-[0_8px_28px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 hover:shadow-[0_12px_36px_rgba(16,185,129,0.5)] active:scale-[0.98] transition-all duration-150">Continue → Your Details</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: REPORTER INFO + SUBMIT -->
+      <div id="step3Panel" class="off">
+        <h2 class="text-2xl font-black tracking-tight mb-2">Your Information</h2>
+        <p class="text-base text-white/50 mb-6">So we can update you on your report. Your information is kept private.</p>
+
+        <div class="grid grid-cols-2 gap-3.5 mb-3.5 max-sm:grid-cols-1">
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Full Name *</label>
+            <input id="rep_name" type="text" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium outline-none transition-all duration-150 placeholder:text-white/30 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] focus:bg-white/10" placeholder="Your full name"/>
+            <p id="err_name" class="text-xs text-red-400 mt-1.5 hidden">Please enter your name.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Phone Number *</label>
+            <input id="rep_phone" type="tel" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium outline-none transition-all duration-150 placeholder:text-white/30 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] focus:bg-white/10" placeholder="+234  "/>
+            <p id="err_phone" class="text-xs text-red-400 mt-1.5 hidden">Please enter your phone number.</p>
+          </div>
+        </div>
+
+        <div class="mb-3.5">
+          <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Email Address (optional)</label>
+          <input id="rep_email" type="email" class="w-full px-4 py-3 bg-white/10 border border-white/15 rounded-[11px] text-white text-sm font-medium outline-none transition-all duration-150 placeholder:text-white/30 focus:border-emerald-500 focus:shadow-[0_0_0_3px_rgba(16,185,129,0.15)] focus:bg-white/10" placeholder="For email updates on your report"/>
+        </div>
+
+        <!-- UPLOAD -->
+        <div class="mb-3.5">
+          <label class="block text-xs font-black uppercase tracking-wider text-white/60 mb-2">Upload Evidence Photo (Optional)</label>
+          <div class="border-2 border-dashed border-white/20 rounded-2xl p-5.5 text-center cursor-pointer transition-all hover:border-emerald-500/50 hover:bg-emerald-500/5" onclick="document.getElementById('rep_photo').click()">
+            <p class="text-sm text-white/60">Click to upload a photo of the incident</p>
+            <p class="text-xs text-white/40 mt-1">JPG, PNG, HEIC   up to 10MB</p>
+          </div>
+          <input type="file" id="rep_photo" accept="image/*" class="hidden" onchange="photoChosen(this)"/>
+          <div id="photoPreview" class="hidden items-center gap-3 mt-3">
+            <span class="text-2xl">📷</span>
+            <p id="photoName" class="text-[13px] text-white/50"></p>
+          </div>
+        </div>
+
+        <!-- CONSENT -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 mb-3.5">
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="rep_consent" class="w-4 h-4 bg-white/10 border border-white/15 rounded mt-1 cursor-pointer accent-emerald-500"/>
+            <span class="text-xs text-white/60 leading-relaxed">
+              I confirm that the information provided is accurate to the best of my knowledge and I consent to EcoClean Nigeria sharing this report with verified environmental agencies for the purpose of resolving this incident.
+            </span>
+          </label>
+        </div>
+        <p id="err_consent" class="text-xs text-red-400 mb-6 hidden">Please accept the consent statement to proceed.</p>
+
+        <div class="flex gap-2.5">
+          <button onclick="goStep(2)" class="flex-1 py-3.5 bg-white/10 border border-white/15 text-emerald-400 font-bold rounded-[10px] text-[13px] cursor-pointer hover:bg-white/15 active:scale-[0.98] transition-all duration-150">Back</button>
+          <button onclick="submitReport()" class="flex-[2] py-3.5 rounded-2xl font-black text-base text-white border-none cursor-pointer bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-[0_8px_28px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 hover:shadow-[0_12px_36px_rgba(16,185,129,0.5)] active:scale-[0.98] transition-all duration-150">Submit Report Now</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="successMessage" class="off text-center px-2.5 py-2.5">
+      <div class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-[0_8px_28px_rgba(16,185,129,0.4)] flex items-center justify-center text-4xl mx-auto mb-4.5">✓</div>
+      <h2 class="font-black text-3xl mb-2">Report Submitted!</h2>
+      <p class="text-base text-white/60 mb-1.5">Your incident has been logged successfully.</p>
+      <p class="text-sm text-white/50 mb-6">A verified agency in your area will be assigned and will reach out to you.</p>
+
+      <div class="bg-emerald-500/15 border-2 border-emerald-500/35 rounded-3xl p-5.5 my-5">
+        <p class="text-xs font-black uppercase tracking-wider text-white/60 mb-2">Your Unique Tracking ID</p>
+        <p id="displayId" class="text-5xl font-black text-emerald-300 mb-2"></p>
+        <p class="text-sm text-white/50">Save this ID to track your report anytime</p>
+      </div>
+
+      <!-- REPORT SUMMARY -->
+      <div class="bg-white/5 border border-white/10 rounded-3xl p-5.5 my-5">
+        <p class="text-xs font-black uppercase tracking-wider text-white/60 mb-4">Report Summary</p>
+        <div id="summaryBody" class="space-y-3"></div>
+      </div>
+
+      <div id="reportDate" class="text-xs text-white/40 mb-6"></div>
+
+      <div class="flex gap-3 justify-center flex-wrap">
+        <a href="track.html" class="px-6 py-3 rounded-2xl font-black text-base text-white border-none cursor-pointer no-underline inline-block bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-[0_8px_28px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 hover:shadow-[0_12px_36px_rgba(16,185,129,0.5)] active:scale-[0.98] transition-all duration-150">Track My Report</a>
+        <button onclick="resetForm()" class="px-6 py-3 rounded-2xl font-black text-base cursor-pointer bg-white/10 border border-white/15 text-white hover:bg-white/15 active:scale-[0.98] transition-all duration-150">+ Submit Another</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+//   USER PERSONALISATION  
+var userName = localStorage.getItem('eco_user_name') || '';
+if (userName) {
+  document.getElementById('navName').textContent = userName;
+  document.getElementById('navAvatar').textContent = ecoInitials(userName);
+  document.getElementById('rep_name').value = userName;
+} else {
+  document.getElementById('navAvatar').textContent = 'EC';
+}
+
+//   ALL 36 STATES + FCT LGA DATA  
+var locationData = {
+  "Abia":["Aba North","Aba South","Arochukwu","Bende","Ikwuano","Isiala Ngwa North","Isiala Ngwa South","Isuikwuato","Obi Ngwa","Ohafia","Osisioma","Ugwunagbo","Ukwa East","Ukwa West","Umuahia North","Umuahia South","Umunneochi"],
+  "Adamawa":["Demsa","Fufore","Ganye","Girei","Gombi","Guyuk","Hong","Jada","Lamurde","Madagali","Maiha","Mayo-Belwa","Michika","Mubi North","Mubi South","Numan","Shelleng","Song","Toungo","Yola North","Yola South"],
+  "Akwa Ibom":["Abak","Eastern Obolo","Eket","Esit Eket","Essien Udim","Etim Ekpo","Etinan","Ibeno","Ibesikpo Asutan","Ibiono Ibom","Ika","Ikono","Ikot Abasi","Ikot Ekpene","Ini","Itu","Mbo","Mkpat Enin","Nsit Atai","Nsit Ibom","Nsit Ubium","Obot Akara","Okobo","Onna","Oron","Oruk Anam","Udung Uko","Ukanafun","Uruan","Urue Offong/Oruko","Uyo"],
+  "Anambra":["Aguata","Anambra East","Anambra West","Anaocha","Awka North","Awka South","Ayamelum","Dunukofia","Ekwusigo","Idemili North","Idemili South","Ihiala","Njikoka","Nnewi North","Nnewi South","Ogbaru","Onitsha North","Onitsha South","Orumba North","Orumba South","Oyi"],
+  "Bauchi":["Alkaleri","Bauchi","Bogoro","Damban","Darazo","Dass","Gamawa","Ganjuwa","Giade","Itas/Gadau","Jama'are","Katagum","Kirfi","Misau","Ningi","Shira","Tafawa Balewa","Toro","Warji","Zaki"],
+  "Bayelsa":["Brass","Ekeremor","Kolokuma/Opokuma","Nembe","Ogbia","Sagbama","Southern Ijaw","Yenagoa"],
+  "Benue":["Agatu","Apa","Ado","Buruku","Gboko","Guma","Gwer East","Gwer West","Katsina-Ala","Konshisha","Kwande","Logo","Makurdi","Obi","Ogbadibo","Ohimini","Oju","Okpokwu","Oturkpo","Tarka","Ukum","Ushongo","Vandeikya"],
+  "Borno":["Abadam","Askira/Uba","Bama","Bayo","Biu","Chibok","Damboa","Dikwa","Gubio","Guzamala","Gwoza","Hawul","Jere","Kaga","Kala/Balge","Konduga","Kukawa","Kwaya Kusar","Mafa","Magumeri","Maiduguri","Marte","Mobbar","Monguno","Ngala","Nganzai","Shani"],
+  "Cross River":["Abi","Akamkpa","Akpabuyo","Bakassi","Bekwarra","Biase","Boki","Calabar Municipal","Calabar South","Etung","Ikom","Obanliku","Obubra","Obudu","Odukpani","Ogoja","Yakuur","Yala"],
+  "Delta":["Aniocha North","Aniocha South","Bomadi","Burutu","Ethiope East","Ethiope West","Ika North East","Ika South","Isoko North","Isoko South","Ndokwa East","Ndokwa West","Okpe","Oshimili North","Oshimili South","Patani","Sapele","Udu","Ughelli North","Ughelli South","Ukwuani","Uvwie","Warri North","Warri South","Warri South West"],
+  "Ebonyi":["Abakaliki","Afikpo North","Afikpo South","Ebonyi","Ezza North","Ezza South","Ikwo","Ishielu","Ivo","Izzi","Ohaozara","Ohaukwu","Onicha"],
+  "Edo":["Akoko-Edo","Egor","Esan Central","Esan North-East","Esan South-East","Esan West","Etsako Central","Etsako East","Etsako West","Igueben","Ikpoba-Okha","Orhionmwon","Oredo","Ovia North-East","Ovia South-West","Owan East","Owan West","Uhunmwonde"],
+  "Ekiti":["Ado Ekiti","Efon","Ekiti East","Ekiti South-West","Ekiti West","Emure","Gbonyin","Ido Osi","Ijero","Ikere","Ikole","Ilejemeje","Irepodun/Ifelodun","Ise/Orun","Moba","Oye"],
+  "Enugu":["Aninri","Awgu","Enugu East","Enugu North","Enugu South","Ezeagu","Igbo Etiti","Igbo Eze North","Igbo Eze South","Isi Uzo","Nkanu East","Nkanu West","Nsukka","Oji River","Udenu","Udi","Uzo-Uwani"],
+  "FCT Abuja":["Abaji","Bwari","Gwagwalada","Kuje","Kwali","Municipal Area Council"],
+  "Gombe":["Akko","Balanga","Billiri","Dukku","Funakaye","Gombe","Kaltungo","Kwami","Nafada","Shongom","Yamaltu/Deba"],
+  "Imo":["Aboh Mbaise","Ahiazu Mbaise","Ehime Mbano","Ezinihitte","Ideato North","Ideato South","Ihitte/Uboma","Ikeduru","Isiala Mbano","Isu","Mbaitoli","Ngor Okpala","Njaba","Nkwerre","Nwangele","Obowo","Oguta","Ohaji/Egbema","Okigwe","Orlu","Orsu","Oru East","Oru West","Owerri Municipal","Owerri North","Owerri West","Unuimo"],
+  "Jigawa":["Auyo","Babura","Biriniwa","Birnin Kudu","Buji","Dutse","Gagarawa","Garki","Gumel","Guri","Gwaram","Gwiwa","Hadejia","Jahun","Kafin Hausa","Kaugama","Kazaure","Kiri Kasama","Maigatari","Malam Madori","Miga","Ringim","Roni","Sule Tankarkar","Taura","Yankwashi"],
+  "Kaduna":["Birnin Gwari","Chikun","Giwa","Igabi","Ikara","Jaba","Jema'a","Kachia","Kaduna North","Kaduna South","Kagarko","Kajuru","Kaura","Kauru","Kubau","Kudan","Lere","Makarfi","Sabon Gari","Sanga","Soba","Zangon Kataf","Zaria"],
+  "Kano":["Ajingi","Albasu","Bagwai","Bebeji","Bichi","Bunkure","Dala","Dambatta","Dawakin Kudu","Dawakin Tofa","Doguwa","Fagge","Gabasawa","Garko","Garun Mallam","Gaya","Gezawa","Gwale","Gwarzo","Kabo","Kano Municipal","Karaye","Kibiya","Kiru","Kumbotso","Kunchi","Kura","Madobi","Makoda","Minjibir","Nasarawa","Rano","Rimin Gado","Rogo","Shanono","Sumaila","Takai","Tarauni","Tofa","Tsanyawa","Tudun Wada","Ungogo","Warawa","Wudil"],
+  "Katsina":["Bakori","Batagarawa","Batsari","Baure","Bindawa","Charanchi","Dan Musa","Dandume","Danja","Daura","Dutsi","Dutsin Ma","Faskari","Funtua","Ingawa","Jibia","Kafur","Kaita","Kankara","Kankia","Katsina","Kurfi","Kusada","Mai'Adua","Malumfashi","Mani","Mashi","Matazu","Musawa","Rimi","Sabuwa","Safana","Sandamu","Zango"],
+  "Kebbi":["Aleiro","Arewa Dandi","Argungu","Augie","Bagudo","Birnin Kebbi","Bunza","Dandi","Fakai","Gwandu","Jega","Kalgo","Koko/Besse","Maiyama","Ngaski","Sakaba","Shanga","Suru","Wasagu/Danko","Yauri","Zuru"],
+  "Kogi":["Adavi","Ajaokuta","Ankpa","Bassa","Dekina","Ibaji","Idah","Igalamela-Odolu","Ijumu","Kabba/Bunu","Kogi","Lokoja","Mopa-Muro","Ofu","Ogori/Magongo","Okehi","Okene","Olamaboro","Omala","Yagba East","Yagba West"],
+  "Kwara":["Asa","Baruten","Edu","Ekiti","Ifelodun","Ilorin East","Ilorin South","Ilorin West","Irepodun","Isin","Kaiama","Moro","Offa","Oke Ero","Oyun","Pategi"],
+  "Lagos":["Agege","Ajeromi-Ifelodun","Alimosho","Amuwo-Odofin","Apapa","Badagry","Epe","Eti-Osa","Ibeju-Lekki","Ifako-Ijaiye","Ikeja","Ikorodu","Kosofe","Lagos Island","Lagos Mainland","Mushin","Ojo","Oshodi-Isolo","Shomolu","Surulere"],
+  "Nasarawa":["Akwanga","Awe","Doma","Karu","Keana","Keffi","Kokona","Lafia","Nasarawa","Nasarawa Egon","Obi","Wamba","Toto"],
+  "Niger":["Agaie","Agwara","Bida","Borgu","Bosso","Chanchaga","Edati","Gbako","Gurara","Katcha","Kontagora","Lapai","Lavun","Magama","Mariga","Mashegu","Mokwa","Muya","Pailoro","Rafi","Rijau","Shiroro","Suleja","Tafa","Wushishi"],
+  "Ogun":["Abeokuta North","Abeokuta South","Ado-Odo/Ota","Ewekoro","Ifo","Ijebu East","Ijebu North","Ijebu North East","Ijebu Ode","Ikenne","Imeko Afon","Ipokia","Obafemi Owode","Odeda","Odogbolu","Ogun Waterside","Remo North","Shagamu","Yewa North","Yewa South"],
+  "Ondo":["Akoko North-East","Akoko North-West","Akoko South-East","Akoko South-West","Akure North","Akure South","Ese Odo","Idanre","Ifedore","Ilaje","Ile Oluji/Okeigbo","Irele","Odigbo","Okitipupa","Ondo East","Ondo West","Ose","Owo"],
+  "Osun":["Atakunmosa East","Atakunmosa West","Ayedaade","Ayedire","Boluwaduro","Boripe","Ede North","Ede South","Egbedore","Ejigbo","Ife Central","Ife East","Ife North","Ife South","Ifedayo","Ifelodun","Ila","Ilesa East","Ilesa West","Irepodun","Irewole","Isokan","Iwo","Obokun","Odo Otin","Ola Oluwa","Olorunda","Oriade","Orolu","Osogbo"],
+  "Oyo":["Afijio","Akinyele","Atiba","Atisbo","Egbeda","Ibadan North","Ibadan North-East","Ibadan North-West","Ibadan South-East","Ibadan South-West","Ibarapa Central","Ibarapa East","Ibarapa North","Ido","Ifedayo","Irepo","Iseyin","Itesiwaju","Iwajowa","Kajola","Lagelu","Ogbomosho North","Ogbomosho South","Ogo Oluwa","Olorunsogo","Olorunda","Oluyole","Ona Ara","Orelope","Ori Ire","Oyo East","Oyo West","Saki East","Saki West","Surulere"],
+  "Plateau":["Barkin Ladi","Bassa","Bokkos","Jos East","Jos North","Jos South","Kanam","Kanke","Langtang North","Langtang South","Mangu","Mikang","Pankshin","Qua'an Pan","Riyom","Shendam","Wase"],
+  "Rivers":["Abua/Odual","Ahoada East","Ahoada West","Akuku-Toru","Andoni","Asari-Toru","Bonny","Degema","Eleme","Emuoha","Etche","Gokana","Ikwerre","Khana","Obio/Akpor","Ogba/Egbema/Ndoni","Ogu/Bolo","Okrika","Omuma","Opobo/Nkoro","Oyigbo","Port Harcourt","Tai"],
+  "Sokoto":["Binji","Bodinga","Dange Shuni","Gada","Goronyo","Gudu","Gwadabawa","Illela","Isa","Kebbe","Kware","Rabah","Sabon Birni","Shagari","Silame","Tambuwal","Tangaza","Tureta","Wamako","Wurno","Yabo"],
+  "Taraba":["Ardo Kola","Bali","Donga","Gashaka","Gassol","Ibi","Jalingo","Karim Lamido","Kurmi","Lau","Sardauna","Taraba","Ussa","Wukari","Yorro","Zing"],
+  "Yobe":["Bade","Borsari","Damaturu","Fika","Fune","Geidam","Gujba","Gulani","Jakusko","Karasuwa","Machina","Nangere","Nguru","Potiskum","Tarmuwa","Yunusari","Yusufari"],
+  "Zamfara":["Anka","Bakura","Birnin Magaji/Kiyaw","Bukkuyum","Bungudu","Chafe","Gummi","Gusau","Kaura Namoda","Maradun","Maru","Shinkafi","Talata Mafara","Zurmi"]
+};
+
+//   POPULATE STATES  
+var stateEl = document.getElementById('stateSelect');
+var lgaEl   = document.getElementById('lgaSelect');
+Object.keys(locationData).sort().forEach(function(s){
+  var opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  stateEl.appendChild(opt);
+});
+stateEl.addEventListener('change', function(){
+  lgaEl.innerHTML = '<option value="">  Choose LGA  </option>';
+  if (locationData[this.value]) {
+    locationData[this.value].forEach(function(lga){
+      var opt = document.createElement('option');
+      opt.value = lga; opt.textContent = lga;
+      lgaEl.appendChild(opt);
+    });
+  }
+});
+
+//   STEP NAVIGATION  
+var currentStep = 1;
+function goStep(n) {
+  // VALIDATE before advancing
+  if (n > currentStep) {
+    if (currentStep === 1 && !validateStep1()) return;
+    if (currentStep === 2 && !validateStep2()) return;
+  }
+  currentStep = n;
+  ['step1Panel','step2Panel','step3Panel'].forEach(function(id,i){
+    document.getElementById(id).classList.toggle('off', i+1 !== n);
+  });
+  // update step dots
+  ['s1','s2','s3'].forEach(function(id,i){
+    var d = document.getElementById(id);
+    d.className = 'step-dot' + (i+1 < n ? ' done' : i+1 === n ? ' active' : '');
+  });
+  document.getElementById('stepNum').textContent = n;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function err(id, show) { 
+  var el = document.getElementById(id);
+  if (el) el.style.display = show ? 'block' : 'none'; 
+}
+
+function validateStep1() {
+  var ok = true;
+  if (!stateEl.value)                                           { err('err_state',true);  ok=false; } else err('err_state',false);
+  if (!lgaEl.value)                                             { err('err_lga',true);    ok=false; } else err('err_lga',false);
+  if (!document.getElementById('rep_addr').value.trim())        { err('err_addr',true);   ok=false; } else err('err_addr',false);
+  return ok;
+}
+function validateStep2() {
+  var ok = true;
+  if (!document.getElementById('rep_cat').value)                { err('err_cat',true);  ok=false; } else err('err_cat',false);
+  if (!document.getElementById('rep_sev').value)                { err('err_sev',true);  ok=false; } else err('err_sev',false);
+  if (!document.getElementById('rep_desc').value.trim())        { err('err_desc',true); ok=false; } else err('err_desc',false);
+  return ok;
+}
+
+//   PHOTO  
+function photoChosen(inp) {
+  if (inp.files && inp.files[0]) {
+    document.getElementById('photoName').textContent = inp.files[0].name;
+    document.getElementById('photoPreview').classList.remove('hidden');
+    document.getElementById('photoPreview').style.display = 'flex';
+  }
+}
+
+//   SUBMIT  
+function submitReport() {
+  var name    = document.getElementById('rep_name').value.trim();
+  var phone   = document.getElementById('rep_phone').value.trim();
+  var consent = document.getElementById('rep_consent').checked;
+  var ok = true;
+  if (!name)    { err('err_name',true);    ok=false; } else err('err_name',false);
+  if (!phone)   { err('err_phone',true);   ok=false; } else err('err_phone',false);
+  if (!consent) { err('err_consent',true); ok=false; } else err('err_consent',false);
+  if (!ok) return;
+
+  var now = new Date();
+  var id = 'EC-' + Math.floor(10000 + Math.random()*90000);
+  var report = {
+    id: id,
+    issue: document.getElementById('rep_cat').value,
+    loc: lgaEl.value + ', ' + stateEl.value,
+    state: stateEl.value,
+    lga: lgaEl.value,
+    address: document.getElementById('rep_addr').value.trim(),
+    status: 'Waiting for Approval',
+    agent: 'Unassigned',
+    type: 'Pending Assignment',
+    date: now.toLocaleDateString('en-NG',{year:'numeric',month:'short',day:'numeric'}),
+    time: now.toLocaleTimeString('en-NG',{hour:'numeric',minute:'2-digit'}),
+    note: 'Your report has been received and is awaiting agency attention.',
+    priority: document.getElementById('rep_sev').value,
+    citizen: name,
+    phone: phone,
+    userEmail: localStorage.getItem('eco_email') || document.getElementById('rep_email').value.trim(),
+    description: document.getElementById('rep_desc').value.trim(),
+    createdAt: now.getTime()
+  };
+  ecoAddReport(report);
+  localStorage.setItem('eco_last_report_id', id);
+  localStorage.setItem('eco_user_name', name);
+  localStorage.setItem('eco_phone', phone);
+  if (report.userEmail) localStorage.setItem('eco_email', report.userEmail);
+  document.getElementById('displayId').textContent = id;
+  document.getElementById('reportDate').textContent = 'Submitted on ' + now.toLocaleDateString('en-NG',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' at ' + report.time;
+
+  // Summary
+  var rows = [
+    ['Location', report.loc],
+    ['Address', report.address],
+    ['Category', report.issue],
+    ['Severity', report.priority],
+    ['Date', report.date],
+    ['Time', report.time],
+    ['Status', report.status],
+    ['Reporter', name],
+    ['Phone', phone]
+  ];
+  var sb = document.getElementById('summaryBody');
+  sb.innerHTML = '';
+  rows.forEach(function(r){
+    var d = document.createElement('div');
+    d.className = 'flex justify-between py-2.5 border-b border-white/10 last:border-0';
+    d.innerHTML = '<span class="text-xs font-bold uppercase tracking-wider text-white/50">' + r[0] + '</span><span class="text-sm font-semibold text-white/80">' + r[1] + '</span>';
+    sb.appendChild(d);
+  });
+
+  document.getElementById('formContainer').classList.add('off');
+  document.getElementById('successMessage').classList.remove('off');
+
+  // Update step dots to all done
+  ['s1','s2','s3'].forEach(function(id){ document.getElementById(id).className='step-dot done'; });
+  document.getElementById('stepNum').textContent = ' ';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+//   RESET  
+function resetForm() {
+  document.getElementById('formContainer').classList.remove('off');
+  document.getElementById('successMessage').classList.add('off');
+  ['rep_addr','rep_postal','rep_desc','rep_phone','rep_email'].forEach(function(i){
+    var el = document.getElementById(i); if(el) el.value='';
+  });
+  stateEl.value=''; lgaEl.innerHTML='<option value="">  Choose LGA  </option>';
+  document.getElementById('rep_cat').value='';
+  document.getElementById('rep_sev').value='';
+  document.getElementById('rep_consent').checked=false;
+  document.getElementById('photoPreview').style.display='none';
+  document.getElementById('photoPreview').classList.add('hidden');
+  goStep(1);
+}
+ecoApplySharedUI();
+</script>
+</body>
+</html>

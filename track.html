@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoClean Nigeria - Track</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="ecoclean-data.js"></script>
+</head>
+<body class="text-white bg-[linear-gradient(135deg,_#021a12_0%,_#064e3b_40%,_#065f46_70%,_#047857_100%)] bg-fixed min-h-screen">
+
+<!-- NAV -->
+<nav class="sticky top-0 z-40 bg-black/55 border-b border-white/8 px-5 py-3.5 grid grid-cols-[auto_1fr_auto] items-center gap-3.5">
+  <div class="flex items-center gap-2.5 min-w-max">
+    <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center font-black text-xs text-white flex-shrink-0">EC</div>
+    <span class="font-black text-base text-white">EcoClean <span class="text-emerald-300">Nigeria</span></span>
+  </div>
+  <div class="flex flex-wrap items-center justify-center gap-4.5">
+    <a href="Index.html" class="inline-block px-3.5 py-2 rounded-lg text-[11px] font-black uppercase tracking-[0.18em] text-white/55 hover:bg-white/10 transition duration-150 no-underline">Home</a>
+    <a href="track.html" class="inline-block px-3.5 py-2 rounded-lg text-[11px] font-black uppercase tracking-[0.18em] bg-emerald-500 text-white transition duration-150 no-underline">Track</a>
+    <a href="report.html" class="inline-block px-3.5 py-2 rounded-lg text-[11px] font-black uppercase tracking-[0.18em] text-white/55 hover:bg-white/10 transition duration-150 no-underline">Report</a>
+    <a href="profile.html" class="inline-block px-3.5 py-2 rounded-lg text-[11px] font-black uppercase tracking-[0.18em] text-white/55 hover:bg-white/10 transition duration-150 no-underline">Profile</a>
+  </div>
+  <div class="flex items-center justify-end min-w-[160px]">
+    <div class="text-right">
+      <div id="navName" data-eco-full-name class="overflow-hidden whitespace-nowrap text-ellipsis text-xs font-black max-w-[140px]"></div>
+      <div class="text-xs font-black uppercase tracking-[0.18em] text-white/42">Citizen</div>
+    </div>
+    <div id="navAvatar" class="ml-2.5 w-[38px] h-[38px] rounded-full bg-[linear-gradient(135deg,_#10b981,_#059669)] shadow-[0_4px_14px_rgba(16,185,129,0.35)] flex items-center justify-center font-black text-sm text-white"></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="text-center px-4 pt-9 pb-5">
+  <div class="inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-200/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.08em] text-emerald-200 mb-4">
+    <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span> Live Tracking System
+  </div>
+  <h1 class="text-[clamp(26px,5vw,44px)] font-black tracking-[-0.02em] mb-2">
+    Track Your <span class="text-emerald-300">Report</span>
+  </h1>
+  <p class="mx-auto mb-0 max-w-[400px] text-sm text-white/60">
+    Monitor your waste report in real-time and connect with agencies across Nigeria.
+  </p>
+</div>
+
+<!-- MAIN -->
+<main class="mx-auto max-w-[980px] px-4 pb-16">
+
+  <!-- TRACK -->
+  <div class="rounded-[22px] border border-white/12 bg-white/7 p-6 mb-5">
+    <div class="flex items-center gap-3.5 mb-4">
+      <div class="w-11 h-11 rounded-[14px] border border-emerald-300/40 bg-emerald-200/10 flex items-center justify-center text-2xl flex-shrink-0"></div>
+      <div>
+        <p class="text-sm font-black mb-0">Track Report</p>
+        <p class="mt-1 text-[12px] text-white/40">Enter your Report ID to see status, agent &amp; location</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2.5 mb-2.5">
+      <input id="trackId" type="text" placeholder="e.g. EC-001   EC-LAG-045   EC-KAN-077"
+        class="flex-1 min-w-[180px] rounded-[14px] border-none bg-white text-slate-900 px-4 py-3 text-sm font-semibold outline-none focus:[box-shadow:0_0_0_3px_rgba(16,185,129,0.45)]"
+        onkeydown="if(event.key==='Enter')trackReport()" />
+      <button onclick="trackReport()"
+        class="rounded-[14px] bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white shadow-[0_6px_20px_rgba(16,185,129,0.35)] transition duration-150 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">
+        Track Report
+      </button>
+    </div>
+    <p class="mb-1.5 text-[11px] text-white/30">Try: EC-001   EC-002   EC-003   EC-LAG-045   EC-ABJ-102   EC-KAN-077 or any ID</p>
+    <p id="trackErr" class="hidden text-red-400 text-[13px] font-bold">Please enter a Report ID.</p>
+
+    <div id="trackResult" class="hidden mt-3 rounded-[18px] border border-emerald-300/40 bg-emerald-200/10 p-5">
+      <div class="flex flex-wrap items-start justify-between gap-2.5 mb-4">
+        <div>
+          <p class="mb-1 text-[10px] uppercase tracking-[0.1em] text-white/35">Report ID</p>
+          <p id="rId" class="text-2xl font-black text-emerald-300 mb-0"></p>
+        </div>
+        <span id="rBadge" class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.05em]"></span>
+      </div>
+      <div class="grid gap-2.5 grid-cols-[repeat(auto-fit,minmax(120px,1fr))] mb-3">
+        <div class="rounded-[12px] border border-white/8 bg-white/5 p-3">
+          <p class="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/32">Agent</p>
+          <p id="rAgent" class="text-sm font-bold mb-0"></p>
+        </div>
+        <div class="rounded-[12px] border border-white/8 bg-white/5 p-3">
+          <p class="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/32">Location</p>
+          <p id="rState" class="text-sm font-bold mb-0"></p>
+        </div>
+        <div class="rounded-[12px] border border-white/8 bg-white/5 p-3">
+          <p class="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/32">Agency Type</p>
+          <p id="rType" class="text-sm font-bold mb-0"></p>
+        </div>
+        <div class="rounded-[12px] border border-white/8 bg-white/5 p-3">
+          <p class="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/32">Updated</p>
+          <p id="rDate" class="text-sm font-bold mb-0"></p>
+        </div>
+      </div>
+      <p id="rNote" class="rounded-[10px] bg-white/5 px-3 py-2 text-[12px] text-white/50 mb-0"></p>
+    </div>
+  </div>
+
+  <!-- LOWER GRID -->
+  <div id="lowerGrid" class="grid gap-5 md:grid-cols-2">
+
+    <!-- HISTORY -->
+    <div class="rounded-[22px] border border-white/12 bg-white/7 p-6">
+      <div class="flex items-center gap-3.5 mb-4">
+        <div class="w-11 h-11 rounded-[14px] border border-sky-300/40 bg-sky-200/10 flex items-center justify-center text-2xl flex-shrink-0"></div>
+        <div>
+          <p class="text-sm font-black mb-0">My Report History</p>
+          <p class="mt-1 text-[12px] text-white/35">Click any report to view full details</p>
+        </div>
+      </div>
+      <div id="histList"></div>
+    </div>
+
+    <!-- AGENCY FINDER -->
+    <div class="rounded-[22px] border border-white/12 bg-white/7 p-6">
+      <div class="flex items-center gap-3.5 mb-4">
+        <div class="w-11 h-11 rounded-[14px] border border-amber-300/40 bg-amber-200/10 flex items-center justify-center text-2xl flex-shrink-0"></div>
+        <div>
+          <p class="text-sm font-black mb-0">Find Agencies Near You</p>
+          <p class="mt-1 text-[12px] text-white/35">All 36 states + FCT   Gov &amp; Private</p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2.5 mb-3">
+        <select id="stSel" class="w-full rounded-[14px] border border-white/15 bg-[rgba(4,26,18,0.92)] px-4 py-3 text-sm font-semibold text-white outline-none focus:[box-shadow:0_0_0_3px_rgba(16,185,129,0.45)] eco-state-select" data-placeholder="Select Your State"></select>
+        <select id="typeSel" class="w-full rounded-[14px] border border-white/15 bg-[rgba(4,26,18,0.92)] px-4 py-3 text-sm font-semibold text-white outline-none focus:[box-shadow:0_0_0_3px_rgba(16,185,129,0.45)]">
+          <option value="" disabled selected hidden>Choose Agency Type</option>
+          <option value="gov">Government Only</option>
+          <option value="pvt">Private Only</option>
+          <option value="ngo">NGO Only</option>
+          <option value="all">Show All (Gov + Private + NGO)</option>
+        </select>
+      </div>
+      <p id="aErr" class="hidden mb-2.5 text-[13px] font-bold text-red-400"></p>
+      <button id="scanBtn" onclick="scanAgencies()"
+        class="w-full rounded-[14px] bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white shadow-[0_6px_20px_rgba(16,185,129,0.35)] transition duration-150 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed">
+        SCAN AGENCIES
+      </button>
+      <div id="aResults" class="mt-4"></div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODAL: History Detail -->
+<div id="histModal" class="fixed inset-0 z-50 hidden bg-black/70 flex items-center justify-center p-4">
+  <div class="mbox bg-[#0a2e22] w-full max-w-[420px] max-h-[90vh] overflow-y-auto rounded-[22px] border border-white/15 p-7" onclick="event.stopPropagation()">
+    <div class="flex flex-wrap items-start justify-between gap-2.5 mb-3">
+      <h3 id="hmTitle" class="text-lg font-black leading-snug text-emerald-300 mb-0"></h3>
+      <button onclick="closeHist()" class="text-2xl text-white/40 transition hover:text-white">X</button>
+    </div>
+    <div id="hmBody"></div>
+    <button onclick="closeHist()" class="mt-4 w-full rounded-[14px] bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white transition duration-150 active:scale-[0.97]">Close</button>
+  </div>
+</div>
+
+<!-- MODAL: Contact Agency -->
+<div id="contactModal" class="fixed inset-0 z-50 hidden bg-black/70 flex items-center justify-center p-4">
+  <div class="mbox bg-[#0a2e22] w-full max-w-[420px] max-h-[90vh] overflow-y-auto rounded-[22px] border border-white/15 p-7" onclick="event.stopPropagation()">
+    <div class="flex flex-wrap items-start justify-between gap-2.5 mb-1">
+      <h3 id="cmName" class="flex-1 text-base font-black leading-tight mb-0"></h3>
+      <button onclick="closeContact()" class="text-2xl text-white/40 transition hover:text-white">X</button>
+    </div>
+    <p id="cmMeta" class="mb-0 text-sm text-white/40"></p>
+    <p id="cmAddr" class="mb-4 text-sm font-semibold text-emerald-300"></p>
+    <div class="mb-4 h-px bg-white/10"></div>
+    <p class="mb-3 text-sm text-white/50">How would you like to reach this agency?</p>
+    <button class="flex items-center gap-3.5 w-full rounded-[13px] border p-3.5 text-white transition duration-150 active:scale-[0.98]" onclick="doAction('call')" style="background:rgba(16,185,129,0.11);border-color:rgba(16,185,129,0.25);">
+      <span class="icon text-[21px] flex-shrink-0">Call</span>
+      <div><b class="block text-sm font-bold">Call Directly</b><small class="text-[11px] text-white/40">Speak with an agent right now</small></div>
+    </button>
+    <button class="flex items-center gap-3.5 w-full rounded-[13px] border p-3.5 text-white transition duration-150 active:scale-[0.98]" onclick="doAction('whatsapp')" style="background:rgba(34,197,94,0.09);border-color:rgba(34,197,94,0.22);">
+      <span class="icon text-[21px] flex-shrink-0">WA</span>
+      <div><b class="block text-sm font-bold">WhatsApp</b><small class="text-[11px] text-white/40">Quick message - usually replies in minutes</small></div>
+    </button>
+    <button class="flex items-center gap-3.5 w-full rounded-[13px] border p-3.5 text-white transition duration-150 active:scale-[0.98]" onclick="doAction('livechat')" style="background:rgba(96,165,250,0.09);border-color:rgba(96,165,250,0.22);">
+      <span class="icon text-[21px] flex-shrink-0">Chat</span>
+      <div><b class="block text-sm font-bold">Live Chat</b><small class="text-[11px] text-white/40">Text conversation with an officer online</small></div>
+    </button>
+    <button class="flex items-center gap-3.5 w-full rounded-[13px] border p-3.5 text-white transition duration-150 active:scale-[0.98]" onclick="doAction('complaint')" style="background:rgba(245,158,11,0.09);border-color:rgba(245,158,11,0.22);">
+      <span class="icon text-[21px] flex-shrink-0">Form</span>
+      <div><b class="block text-sm font-bold">File a Complaint</b><small class="text-[11px] text-white/40">Submit a formal written complaint</small></div>
+    </button>
+    <button class="flex items-center gap-3.5 w-full rounded-[13px] border p-3.5 text-white transition duration-150 active:scale-[0.98]" onclick="doAction('email')" style="background:rgba(139,92,246,0.09);border-color:rgba(139,92,246,0.22);">
+      <span class="icon text-[21px] flex-shrink-0">Email</span>
+      <div><b class="block text-sm font-bold">Send an Email</b><small class="text-[11px] text-white/40">Non-urgent - reply in 2-3 working days</small></div>
+    </button>
+    <button onclick="closeContact()" class="mt-3 w-full rounded-[14px] bg-transparent text-[12px] text-white/40 transition hover:text-white">Cancel</button>
+  </div>
+</div>
+
+<!-- MODAL: Action Result -->
+<div id="resultModal" class="fixed inset-0 z-50 hidden bg-black/70 flex items-center justify-center p-4">
+  <div class="mbox bg-[#0a2e22] w-full max-w-[420px] max-h-[90vh] overflow-y-auto rounded-[22px] border border-white/15 p-7 text-center" onclick="event.stopPropagation()">
+    <div id="rmIcon" class="mb-3 text-[50px]"></div>
+    <h3 id="rmTitle" class="text-xl font-black mb-2"></h3>
+    <p id="rmBody" class="mb-5 whitespace-pre-line text-sm text-white/60 leading-7"></p>
+    <button onclick="closeResult()" class="w-full rounded-[14px] bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white transition duration-150 active:scale-[0.97]">OK - Close</button>
+  </div>
+</div>
+
+<script>
+//   DATA  
+var DB = {};
+ecoAllReports().forEach(function(r) { DB[r.id] = r; });
+var userName = localStorage.getItem("eco_user_name") || "Chidi Okeke";
+document.getElementById("navName").textContent = userName;
+document.getElementById("navAvatar").textContent = ecoInitials(userName);
+var BADGE_BASE = "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.05em]";
+var SBADGE = {
+  "Assigned":             {badge:"bg-[black] text-emerald-400 border-emerald-300/60", dot:"bg-emerald-300"},
+  "Ongoing":              {badge:"bg-[black] text-sky-400 border-sky-300/60", dot:"bg-sky-300"},
+  "Waiting for Approval": {badge:"bg-[dark] text-amber-400 border-amber-300/60", dot:"bg-amber-300"},
+  "Resolved":             {badge:"bg-emerald-100/75 text-emerald-400 border-emerald-300/60", dot:"bg-emerald-300"}
+};
+
+var AGENCY_TPLS = [
+  {sfx:"Environmental Agency",         email:"info@ecoclean.ng",      phone:"07012345678", wa:"07012345678", addr:"Block 4, Govt Secretariat"},
+  {sfx:"Waste Management Authority",   email:"wma@ecoclean.ng",       phone:"08023456789", wa:null,          addr:"12, Civic Centre Road"},
+  {sfx:"GreenForce Solutions",         email:"hello@greenforce.ng",   phone:null,          wa:"08134567890", addr:"Plot 9, Industrial Layout"},
+  {sfx:"EcoPure Contractors Ltd",      email:"contact@ecopure.ng",    phone:"09045678901", wa:"09045678901", addr:"22, Commercial Avenue"},
+  {sfx:"CleanCity Environmental Dept", email:"cleancity@gov.ng",      phone:"07056789012", wa:null,          addr:"State Ministry of Environment"}
+];
+
+// FIX: use a plain array instead of window["_ag_"+idx] to avoid scope issues
+var AGENCY_LIST = [];
+var CURRENT_AGENCY = null;
+
+//   BUILD HISTORY  
+var histIds = ecoMyReports().map(function(r) { return r.id; });
+var histListEl = document.getElementById("histList");
+
+histIds.forEach(function(id) {
+  var r = DB[id];
+  if (!r) return;
+  var s = SBADGE[r.status] || SBADGE["Ongoing"];
+  var card = document.createElement("div");
+  card.className = "flex items-start gap-3.5 p-3.5 rounded-[14px] border border-white/10 bg-white/5 cursor-pointer transition duration-200 mb-2.5 hover:bg-white/10 hover:border-white/20";
+  card.setAttribute("data-id", id);
+  card.innerHTML =
+    '<span class="inline-block w-[7px] h-[7px] rounded-full ' + s.dot + ' mt-1.5 flex-shrink-0"></span>' +
+    '<div class="flex-1 min-w-0">' +
+      '<div class="flex flex-wrap items-center gap-2.5 mb-1">' +
+        '<span class="text-sm font-black text-emerald-300">' + id + '</span>' +
+        '<span class="' + BADGE_BASE + ' ' + s.badge + '"><span class="inline-block w-[6px] h-[6px] rounded-full ' + s.dot + '"></span>' + r.status + '</span>' +
+      '</div>' +
+      '<p class="mb-0 text-[12px] text-white/50">' + r.agent + ' - ' + (r.loc || r.state) + '</p>' +
+      '<p class="mt-0.5 text-[11px] text-white/30">' + r.date + (r.time ? ' - ' + r.time : '') + ' - ' + r.type + '</p>' +
+    '</div>' +
+    '<span class="text-2xl opacity-30"> </span>';
+  histListEl.appendChild(card);
+});
+
+if (histIds.length === 0) {
+  histListEl.innerHTML = '<p style="color:rgba(255,255,255,0.34);font-size:13px;text-align:center;padding:18px;">No submitted reports yet.</p>';
+}
+// FIX: delegated listener on the container (works for dynamically built cards)
+document.getElementById("histList").addEventListener("click", function(e) {
+  var card = e.target.closest("[data-id]");
+  if (card) { openHist(card.getAttribute("data-id")); }
+});
+
+//   OVERLAY BACKDROP CLOSE  
+// FIX: clicking the dark backdrop (not the mbox) closes the modal
+["histModal","contactModal","resultModal"].forEach(function(id) {
+  document.getElementById(id).addEventListener("click", function(e) {
+    if (e.target === this) { this.classList.add("hidden"); }
+  });
+});
+
+//   TRACK  
+function trackReport() {
+  var raw = document.getElementById("trackId").value.trim().toUpperCase();
+  var errEl = document.getElementById("trackErr");
+  var resEl = document.getElementById("trackResult");
+  errEl.classList.add("hidden");
+  resEl.classList.add("hidden");
+  if (!raw) { errEl.textContent = "Please enter a Report ID."; errEl.classList.remove("hidden"); return; }
+
+  var r = ecoFindReport(raw);
+  if (!r) {
+    errEl.textContent = "Report ID not found. Please check the ID from your submission receipt.";
+    errEl.classList.remove("hidden");
+    return;
+  }
+
+  var s = SBADGE[r.status] || SBADGE["Ongoing"];
+  document.getElementById("rId").textContent    = raw;
+  document.getElementById("rAgent").textContent = r.agent;
+  document.getElementById("rState").textContent = r.loc || r.state;
+  document.getElementById("rType").textContent  = r.type;
+  document.getElementById("rDate").textContent  = r.date + (r.time ? " - " + r.time : "");
+  document.getElementById("rNote").textContent  = "Details: " + (r.description || r.note || "Report received.");
+  var b = document.getElementById("rBadge");
+  b.className = BADGE_BASE + " " + s.badge;
+  b.innerHTML = '<span class="inline-block w-[6px] h-[6px] rounded-full ' + s.dot + '"></span>' + r.status;
+  resEl.classList.remove("hidden");
+  resEl.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+//   HISTORY MODAL  
+function openHist(id) {
+  var r = DB[id];
+  var s = SBADGE[r.status] || SBADGE["Ongoing"];
+  document.getElementById("hmTitle").textContent = id;
+  document.getElementById("hmBody").innerHTML =
+    '<div class="flex flex-wrap items-center justify-between gap-2.5 mb-3">' +
+      '<span class="' + BADGE_BASE + ' ' + s.badge + '"><span class="inline-block w-[6px] h-[6px] rounded-full ' + s.dot + '"></span>' + r.status + '</span>' +
+      '<span class="text-[12px] text-white/30">' + r.date + '</span>' +
+    '</div>' +
+    iRow("Agent",       r.agent) +
+    iRow("Location",    r.state) +
+    iRow("Agency Type", r.type)  +
+    '<div class="rounded-[12px] border border-emerald-300/20 bg-emerald-200/10 p-3 text-sm text-white/60 leading-7">' + r.note + '</div>';
+  document.getElementById("histModal").classList.remove("hidden");
+}
+
+function iRow(label, val) {
+  return '<div class="rounded-[12px] border border-white/8 bg-white/5 p-3 mb-2.5"><p class="mb-1 text-[10px] uppercase tracking-[0.08em] text-white/30">' + label + '</p><p class="mb-0 text-sm font-bold">' + val + '</p></div>';
+}
+function closeHist() { document.getElementById("histModal").classList.add("hidden"); }
+
+//   SCAN AGENCIES  
+function scanAgencies() {
+  var state   = document.getElementById("stSel").value;
+  var typeVal = document.getElementById("typeSel").value;
+  var errEl   = document.getElementById("aErr");
+  var btn     = document.getElementById("scanBtn");
+  var resEl   = document.getElementById("aResults");
+
+  errEl.classList.add("hidden");
+  resEl.innerHTML = "";
+
+  if (!state)   { errEl.textContent = "Please select a state first.";  errEl.classList.remove("hidden"); return; }
+  if (!typeVal) { errEl.textContent = "Please choose an agency type."; errEl.classList.remove("hidden"); return; }
+
+  btn.textContent = "Scanning Agencies...";
+  btn.disabled = true;
+
+  setTimeout(function() {
+    btn.textContent = "SCAN AGENCIES";
+    btn.disabled = false;
+
+    // FIX: rebuild AGENCY_LIST fresh on every scan so indices are always valid
+    AGENCY_LIST = [];
+
+    AGENCY_TPLS.forEach(function(t, i) {
+      var isGov = (typeVal === "all") ? (i % 3 === 0) : (typeVal === "gov");
+      var isNgo = (typeVal === "all") ? (i % 3 === 2) : (typeVal === "ngo");
+      AGENCY_LIST.push({
+        name:  state + " " + t.sfx,
+        type:  isNgo ? "Non-Governmental Organization (NGO)" : (isGov ? "Government Agency" : "Private Contractor"),
+        email: t.email,
+        phone: t.phone,
+        wa:    t.wa,
+        addr:  t.addr + ", " + state,
+        dist:  (1.5 + i * 2.3).toFixed(1) + " KM   ~" + (4 + i * 4) + " mins drive"
+      });
+    });
+
+    resEl.innerHTML = '<p class="mb-3 text-[11px] font-black uppercase tracking-[0.07em] text-emerald-300">' + AGENCY_LIST.length + ' agencies found in ' + state + '</p>';
+
+    AGENCY_LIST.forEach(function(a, idx) {
+      var isGovCard = (a.type === "Government Agency");
+      var typeBadgeStyle = isGovCard
+        ? "background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.28);color:#93c5fd;"
+        : "background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.28);color:#34d399;";
+
+      // FIX: build button HTML only for available contact methods
+      var btnHtml = "";
+      if (a.phone) btnHtml += '<button class="inline-flex items-center rounded-[10px] px-3 py-2 text-[12px] font-bold transition duration-150 active:scale-[0.95]" onclick="openContact(' + idx + ',\'call\')" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#34d399;">Call</button>';
+      if (a.wa)    btnHtml += '<button class="inline-flex items-center rounded-[10px] px-3 py-2 text-[12px] font-bold transition duration-150 active:scale-[0.95]" onclick="openContact(' + idx + ',\'whatsapp\')" style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.28);color:#86efac;">WhatsApp</button>';
+                   btnHtml += '<button class="inline-flex items-center rounded-[10px] px-3 py-2 text-[12px] font-bold transition duration-150 active:scale-[0.95]" onclick="openContact(' + idx + ',\'livechat\')" style="background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.28);color:#93c5fd;">Live Chat</button>';
+                   btnHtml += '<button class="inline-flex items-center rounded-[10px] px-3 py-2 text-[12px] font-bold transition duration-150 active:scale-[0.95]" onclick="openContact(' + idx + ',\'complaint\')" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.28);color:#fcd34d;">Complaint</button>';
+                   btnHtml += '<button class="inline-flex items-center rounded-[10px] px-3 py-2 text-[12px] font-bold transition duration-150 active:scale-[0.95]" onclick="openContact(' + idx + ',\'email\')" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.28);color:#c4b5fd;">Email</button>';
+
+      var card = document.createElement("div");
+      card.className = "rounded-[16px] border border-white/10 bg-white/5 mb-3 transition duration-200 hover:border-white/20 p-4";
+      card.innerHTML =
+        '<p class="mb-2 text-sm font-black">' + a.name + '</p>' +
+        '<span class="inline-flex rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.05em]" style="' + typeBadgeStyle + '">' + a.type + '</span>' +
+        '<p class="mt-3 mb-2 text-[12px] text-white/50">' + a.addr + '</p>' +
+        '<p class="mb-3 text-[12px] font-semibold text-emerald-200">' + a.dist + '</p>' +
+        '<div class="flex flex-wrap gap-2">' + btnHtml + '</div>';
+      resEl.appendChild(card);
+    });
+  }, 1200);
+}
+
+//   CONTACT MODAL  
+// FIX: renamed from openContactIdx   openContact; now correctly sets CURRENT_AGENCY
+function openContact(idx, action) {
+  CURRENT_AGENCY = AGENCY_LIST[idx];
+  if (!CURRENT_AGENCY) { return; }  // safety guard
+  document.getElementById("cmName").textContent = CURRENT_AGENCY.name;
+  document.getElementById("cmMeta").textContent = CURRENT_AGENCY.type;
+  document.getElementById("cmAddr").textContent = "  " + CURRENT_AGENCY.addr + "       " + CURRENT_AGENCY.dist;
+  document.getElementById("contactModal").classList.remove("hidden");
+}
+function closeContact() { document.getElementById("contactModal").classList.add("hidden"); }
+
+function doAction(action) {
+  // FIX: capture agency reference BEFORE closing the modal
+  var a = CURRENT_AGENCY;
+  closeContact();
+  if (!a) { return; }
+
+  var msgs = {
+    call:      {icon:" ", title:"Calling " + a.name,   body:"An agent will pick up shortly.\n\n  Phone: " + (a.phone || "08012345678") + "\n\nPlease have your Report ID ready."},
+    whatsapp:  {icon:" ", title:"Opening WhatsApp",     body:"Connecting you to " + a.name + " on WhatsApp.\n\n  " + (a.wa || "08098765432") + "\n\nTypically replies within 5 15 minutes."},
+    livechat:  {icon:" ", title:"Live Chat Started",   body:"You are now connected to " + a.name + ".\n\nAverage wait: 5 10 minutes.\nPlease describe your issue clearly."},
+    complaint: {icon:" ", title:"Complaint Form Ready", body:"Opening formal complaint form for:\n" + a.name + "\n\nYour report data will be pre-filled.\nYou will receive a case reference number."},
+    email:     {icon:" ", title:"Email Sent",           body:"Your message has been sent to " + a.name + ".\n\n  " + a.email + "\n\nExpect a reply within 2-3 working days."}
+  };
+  var m = msgs[action];
+  if (!m) { return; }
+  document.getElementById("rmIcon").textContent  = m.icon;
+  document.getElementById("rmTitle").textContent = m.title;
+  document.getElementById("rmBody").textContent  = m.body;
+  document.getElementById("resultModal").classList.remove("hidden");
+}
+function closeResult() { document.getElementById("resultModal").classList.add("hidden"); }
+ecoApplySharedUI();
+</script>
+</body>
+</html>
+

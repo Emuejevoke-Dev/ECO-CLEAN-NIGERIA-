@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join EcoClean Nigeria</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="ecoclean-data.js"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+
+<div class="min-h-screen flex flex-col md:flex-row">
+
+  <!-- LEFT PANEL -->
+  <div class="hidden md:flex w-1/2 relative overflow-hidden bg-cover bg-center text-white" style="background-image: linear-gradient(160deg, rgba(2,44,22,0.55) 0%, rgba(5,100,60,0.35) 100%), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1600&q=100');">
+    <div class="absolute inset-0 bg-emerald-950/20"></div>
+    <div class="relative z-10 flex h-full flex-col justify-between p-12">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/30 bg-white/20 text-base font-black">EC</div>
+        <span class="text-lg font-black tracking-tight">EcoClean Nigeria</span>
+      </div>
+
+      <div class="relative max-w-md">
+        <div class="mb-6 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold backdrop-blur-sm">
+          Nigeria's #1 Environmental Platform
+        </div>
+        <h2 class="mb-4 text-5xl font-black leading-tight tracking-tight text-white" style="max-width: 18rem;">
+          Restore Our<br /><span class="text-emerald-300">Green Earth.</span>
+        </h2>
+        <p class="mb-10 max-w-lg text-sm text-white/75 leading-7">
+          Join thousands of Nigerians reporting waste issues and connecting with agencies to clean up our communities.
+        </p>
+
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div class="rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
+            <p class="text-2xl font-black">12k+</p>
+            <p class="mt-1 text-[11px] text-white/70">Reports Filed</p>
+          </div>
+          <div class="rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
+            <p class="text-2xl font-black">340+</p>
+            <p class="mt-1 text-[11px] text-white/70">Agencies</p>
+          </div>
+          <div class="rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
+            <p class="text-2xl font-black">89%</p>
+            <p class="mt-1 text-[11px] text-white/70">Resolved</p>
+          </div>
+        </div>
+
+        <div class="mt-10 space-y-3 text-sm text-white/80">
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-2xl bg-white/15 text-sm font-black">1</div>
+            <span>Report waste issues directly from your location</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-2xl bg-white/15 text-sm font-black">2</div>
+            <span>Agencies respond and resolve cases fast</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-2xl bg-white/15 text-sm font-black">3</div>
+            <span>Track every case from submission to resolution</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl"></div>
+    <div class="absolute -left-28 bottom-12 h-56 w-56 rounded-full bg-emerald-700/10 blur-3xl"></div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-emerald-50 via-emerald-100 to-slate-50 p-6 md:p-10 relative overflow-hidden">
+    <div class="absolute right-0 top-16 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl"></div>
+    <div class="absolute left-8 bottom-12 h-52 w-52 rounded-full bg-slate-900/5 blur-3xl"></div>
+
+    <div class="relative z-10 w-full max-w-xl rounded-[28px] bg-white/95 border border-white/80 p-8 shadow-[0_20px_60px_rgba(5,100,60,0.12),0_4px_16px_rgba(0,0,0,0.06)]">
+
+      <div class="md:hidden flex items-center gap-3 mb-6">
+        <div class="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-sm font-black text-white">EC</div>
+        <span class="text-base font-black text-emerald-900">EcoClean Nigeria</span>
+      </div>
+
+      <div class="mb-6 rounded-2xl bg-emerald-100 p-1">
+        <button id="tabSignup" class="tab-btn flex-1 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-emerald-900 shadow-sm transition" onclick="switchTab('signup')">Create Account</button>
+        <button id="tabLogin" class="tab-btn flex-1 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:text-slate-900" onclick="switchTab('login')">Sign In</button>
+      </div>
+
+      <div id="signupPanel">
+        <div class="mb-6">
+          <h2 class="text-2xl font-black text-slate-900">Create Your Account</h2>
+          <p class="mt-2 text-sm text-slate-500">Join EcoClean Nigeria today. It's free.</p>
+        </div>
+
+        <p class="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">I am registering as</p>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <div id="roleCardCitizen" class="role-card group cursor-pointer rounded-3xl border border-emerald-500 bg-emerald-50 p-4 text-center transition duration-200 hover:-translate-y-1 hover:shadow-lg" onclick="selectRole('citizen')">
+            <div id="citizenIconWrap" class="icon-wrap mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-lg font-black text-white shadow-lg">C</div>
+            <p class="font-semibold text-slate-900">Citizen</p>
+            <p class="mt-1 text-[11px] text-slate-500">Report waste issues</p>
+          </div>
+          <div id="roleCardAgency" class="role-card group cursor-pointer rounded-3xl border border-slate-200 bg-slate-50 p-4 text-center transition duration-200 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg" onclick="selectRole('agency')">
+            <div id="agencyIconWrap" class="icon-wrap mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-lg font-black text-emerald-700">A</div>
+            <p class="font-semibold text-slate-900">Agency</p>
+            <p class="mt-1 text-[11px] text-slate-500">Manage & resolve</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div id="citizenFields" class="space-y-4">
+            <div>
+              <input id="su_name" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Full Name" />
+              <p id="err_name" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Please enter your full name.</p>
+            </div>
+            <div>
+              <select id="su_citizenState" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 eco-state-select" data-placeholder="Your State"></select>
+              <p id="err_citizen_state" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Please select your state.</p>
+            </div>
+          </div>
+
+          <div id="agencyFields" class="hidden space-y-4">
+            <div>
+              <input id="su_orgName" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Organization Name" />
+              <p id="err_org" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Please enter your organization name.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <select id="su_agencyType" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                  <option value="" disabled selected hidden>Agency Type</option>
+                  <option value="government">Government</option>
+                  <option value="private">Private</option>
+                  <option value="ngo">Non-Governmental Organization (NGO)</option>
+                </select>
+                <p id="err_type" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Required.</p>
+              </div>
+              <div>
+                <select id="su_state" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 eco-state-select" data-placeholder="State"></select>
+                <p id="err_state" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Required.</p>
+              </div>
+            </div>
+            <div>
+              <input id="su_address" type="text" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Office Address" />
+              <p id="err_addr" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Please enter your address.</p>
+            </div>
+          </div>
+
+          <div>
+            <input id="su_email" type="email" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Email Address" />
+            <p id="err_email" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Please enter a valid email.</p>
+          </div>
+          <div>
+            <input id="su_phone" type="tel" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Phone Number" />
+            <p id="err_phone" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Please enter your phone number.</p>
+          </div>
+          <div>
+            <input id="su_password" type="password" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Create Password (min. 6 chars)" />
+            <p id="err_pass" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Password must be at least 6 characters.</p>
+          </div>
+          <div>
+            <input id="su_confirm" type="password" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Confirm Password" />
+            <p id="err_confirm" class="err hidden mt-2 text-[12px] font-semibold text-red-600">Passwords do not match.</p>
+          </div>
+
+          <button class="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-3 text-sm font-extrabold text-white shadow-xl shadow-emerald-500/20 transition duration-200 hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.98]" onclick="handleSignup()">Complete Registration</button>
+
+          <p class="mt-4 text-center text-sm text-slate-500">
+            Already have an account?
+            <a onclick="switchTab('login')" class="font-semibold text-emerald-700 hover:text-emerald-900 cursor-pointer">Sign In</a>
+          </p>
+        </div>
+      </div>
+
+      <div id="loginPanel" class="hidden">
+        <div class="mb-6">
+          <h2 class="text-2xl font-black text-slate-900">Welcome Back</h2>
+          <p class="mt-2 text-sm text-slate-500">Sign in to your EcoClean account.</p>
+        </div>
+        <div class="space-y-4">
+          <input id="li_email" type="email" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Email Address" />
+          <input id="li_password" type="password" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Password" />
+          <p id="err_login" class="hidden text-[12px] font-semibold text-red-600">Invalid email or password. Please try again.</p>
+          <button class="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-3 text-sm font-extrabold text-white shadow-xl shadow-emerald-500/20 transition duration-200 hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.98]" onclick="handleLogin()">Sign In</button>
+
+          <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
+            <p class="font-semibold">Demo Login</p>
+            <p class="mt-2 text-sm text-emerald-800"><strong>Citizen:</strong> citizen@demo.com + any password</p>
+            <p class="text-sm text-emerald-800"><strong>Agency:</strong> agency@demo.com + any password</p>
+          </div>
+
+          <p class="text-center text-sm text-slate-500">
+            Don't have an account?
+            <a onclick="switchTab('signup')" class="font-semibold text-emerald-700 hover:text-emerald-900 cursor-pointer">Sign Up</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  var currentRole = 'citizen';
+  var tabBaseClass = 'tab-btn flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition';
+  var tabActiveClass = ' bg-white text-emerald-900 shadow-sm';
+  var tabInactiveClass = ' text-slate-600 hover:text-slate-900';
+
+  var roleBaseClass = 'role-card group cursor-pointer rounded-3xl border p-4 text-center transition duration-200 hover:-translate-y-1 hover:shadow-lg';
+  var roleSelectedClass = ' border-emerald-500 bg-emerald-50 shadow-xl';
+  var roleDefaultClass = ' border-slate-200 bg-slate-50';
+  var iconBaseClass = 'icon-wrap mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl text-lg font-black transition duration-200';
+  var iconSelectedClass = ' bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg';
+  var iconDefaultClass = ' bg-slate-100 text-emerald-700';
+
+  function switchTab(tab) {
+    var s = tab === 'signup';
+    document.getElementById('signupPanel').classList.toggle('hidden', !s);
+    document.getElementById('loginPanel').classList.toggle('hidden', s);
+    document.getElementById('tabSignup').className = tabBaseClass + (s ? tabActiveClass : tabInactiveClass);
+    document.getElementById('tabLogin').className  = tabBaseClass + (!s ? tabActiveClass : tabInactiveClass);
+  }
+
+  function selectRole(role) {
+    currentRole = role;
+    var isCit = role === 'citizen';
+    var citizen = document.getElementById('roleCardCitizen');
+    var agency = document.getElementById('roleCardAgency');
+    var citIcon = document.getElementById('citizenIconWrap');
+    var agIcon = document.getElementById('agencyIconWrap');
+
+    citizen.className = roleBaseClass + (isCit ? roleSelectedClass : roleDefaultClass);
+    agency.className  = roleBaseClass + (!isCit ? roleSelectedClass : roleDefaultClass);
+    citIcon.className = iconBaseClass + (isCit ? iconSelectedClass : iconDefaultClass);
+    agIcon.className  = iconBaseClass + (!isCit ? iconSelectedClass : iconDefaultClass);
+
+    document.getElementById('citizenFields').classList.toggle('hidden', !isCit);
+    document.getElementById('agencyFields').classList.toggle('hidden', isCit);
+  }
+
+  function showErr(id, show) {
+    document.getElementById(id).classList.toggle('hidden', !show);
+  }
+
+  function handleSignup() {
+    var ok = true;
+    var email = document.getElementById('su_email').value.trim();
+    var pass  = document.getElementById('su_password').value;
+    var phone = document.getElementById('su_phone').value.trim();
+    var conf  = document.getElementById('su_confirm').value;
+
+    if (currentRole === 'citizen') {
+      var name = document.getElementById('su_name').value.trim();
+      var citizenState = document.getElementById('su_citizenState').value;
+      showErr('err_name', !name); if (!name) ok = false;
+      showErr('err_citizen_state', !citizenState); if (!citizenState) ok = false;
+    } else {
+      var org   = document.getElementById('su_orgName').value.trim();
+      var addr  = document.getElementById('su_address').value.trim();
+      var type  = document.getElementById('su_agencyType').value;
+      var state = document.getElementById('su_state').value;
+      showErr('err_org',   !org);   if (!org)   ok = false;
+      showErr('err_addr',  !addr);  if (!addr)  ok = false;
+      showErr('err_type',  !type);  if (!type)  ok = false;
+      showErr('err_state', !state); if (!state) ok = false;
+    }
+    showErr('err_email',   !email || !email.includes('@')); if (!email || !email.includes('@')) ok = false;
+    showErr('err_phone',   !phone); if (!phone) ok = false;
+    showErr('err_pass',    pass.length < 6);               if (pass.length < 6)               ok = false;
+    showErr('err_confirm', pass !== conf);                 if (pass !== conf)                  ok = false;
+    if (!ok) return;
+
+    localStorage.setItem('eco_role',  currentRole);
+    localStorage.setItem('eco_email', email);
+    localStorage.setItem('eco_phone', phone);
+    var joinedNow = new Date();
+    localStorage.setItem('eco_registered_at', joinedNow.toISOString());
+    localStorage.setItem('eco_joined', joinedNow.toLocaleDateString('en-NG',{year:'numeric',month:'short',day:'numeric'}));
+    if (currentRole === 'citizen') {
+      localStorage.setItem('eco_user_name', document.getElementById('su_name').value.trim());
+      localStorage.setItem('eco_state', document.getElementById('su_citizenState').value);
+    } else {
+      var orgN = document.getElementById('su_orgName').value.trim();
+      localStorage.setItem('eco_user_name',    orgN);
+      localStorage.setItem('eco_agency_name',  orgN);
+      localStorage.setItem('eco_agency_type',  document.getElementById('su_agencyType').value);
+      localStorage.setItem('eco_agency_state', document.getElementById('su_state').value);
+      localStorage.setItem('eco_state',        document.getElementById('su_state').value);
+      localStorage.setItem('eco_agency_phone', phone);
+      localStorage.setItem('eco_agency_address', document.getElementById('su_address').value.trim());
+    }
+    window.location.href = currentRole === 'agency' ? 'agencies.html' : 'Index.html';
+  }
+
+  function handleLogin() {
+    var email = document.getElementById('li_email').value.trim();
+    var pass  = document.getElementById('li_password').value;
+    if (!email || !pass) { document.getElementById('err_login').classList.remove('hidden'); return; }
+    document.getElementById('err_login').classList.add('hidden');
+    var role = email.toLowerCase().includes('agency') ? 'agency' : 'citizen';
+    var previousEmail = localStorage.getItem('eco_email') || '';
+    localStorage.setItem('eco_role',  role);
+    localStorage.setItem('eco_email', email);
+    if (!localStorage.getItem('eco_joined')) {
+      var loginNow = new Date();
+      localStorage.setItem('eco_registered_at', loginNow.toISOString());
+      localStorage.setItem('eco_joined', loginNow.toLocaleDateString('en-NG',{year:'numeric',month:'short',day:'numeric'}));
+    }
+    if (previousEmail !== email || !localStorage.getItem('eco_user_name')) {
+      var n = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+      localStorage.setItem('eco_user_name', n);
+    }
+    window.location.href = 'Index.html';
+  }
+
+  selectRole('citizen');
+  switchTab('signup');
+</script>
+</body>
+</html>
