@@ -285,7 +285,7 @@
       localStorage.setItem('eco_agency_phone', phone);
       localStorage.setItem('eco_agency_address', document.getElementById('su_address').value.trim());
     }
-    window.location.href = currentRole === 'agency' ? 'agencies.html' : 'Index.html';
+    window.location.href = currentRole === 'agency' ? 'agencies.html' : 'index.html';
   }
 
   function handleLogin() {
@@ -306,7 +306,7 @@
       var n = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
       localStorage.setItem('eco_user_name', n);
     }
-    window.location.href = 'Index.html';
+    window.location.href = 'index.html';
   }
 
   selectRole('citizen');
