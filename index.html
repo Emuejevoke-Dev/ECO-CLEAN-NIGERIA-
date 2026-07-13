@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EcoClean Nigeria</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="ecoclean-data.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        emerald: {
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
+        },
+      },
+      animation: {
+        'hero-glow': 'heroGlow 3.8s ease-in-out infinite',
+        'title-drift': 'titleDrift 5.2s ease-in-out infinite',
+        'pulse-slow': 'pp 1.8s ease-in-out infinite',
+      },
+      keyframes: {
+        heroGlow: {
+          '0%,100%': { textShadow: '0 0 0 rgba(52,211,153,0)' },
+          '50%': { textShadow: '0 12px 38px rgba(16,185,129,0.28)' },
+        },
+        titleDrift: {
+          '0%,100%': { transform: 'translateY(0)', opacity: '0.96' },
+          '50%': { transform: 'translateY(-5px)', opacity: '1' },
+        },
+        pp: {
+          '0%,100%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(1.7)', opacity: '0.4' },
+        },
+      },
+      backgroundImage: {
+        'hero-gradient': "linear-gradient(160deg, rgba(2,26,18,0.93), rgba(4,60,36,0.82)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1800&q=100')",
+      }
+    },
+  },
+}
+</script>
+<style>
+/* Minimal custom styles - only what Tailwind can't handle */
+.topnav {
+  transition: all 0.3s;
+}
+.topnav.scrolled {
+  background: rgba(2,26,18,0.95);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+.nav-a.on {
+  background: #10b981;
+  color: white;
+}
+.hero-title .title-line:nth-child(3) {
+  animation-delay: 0.35s;
+}
+.hero-title .title-line:nth-child(5) {
+  animation-delay: 0.7s;
+}
+.sel-box option {
+  background: #064e3b;
+}
+.off {
+  display: none !important;
+}
+</style>
+</head>
+<body class="overflow-x-hidden bg-[#021a12] font-sans text-white">
+
+<!-- NAVBAR -->
+<nav class="fixed inset-x-0 top-0 z-[100] grid grid-cols-[auto_1fr_auto] items-center gap-3.5 px-7 py-3.5 max-[640px]:grid-cols-[1fr_auto] max-[640px]:px-4 max-[640px]:py-3 topnav" id="nav">
+  <div class="flex min-w-max items-center gap-2.5">
+    <div class="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-emerald-500 to-emerald-600 text-xs font-black">EC</div>
+    <span class="text-[17px] font-black">EcoClean <span class="text-emerald-400">Nigeria</span></span>
+  </div>
+  <div class="flex flex-wrap items-center justify-center gap-[18px] max-[640px]:order-3 max-[640px]:col-span-2">
+    <a href="Index.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a on">Home</a>
+    <a href="track.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a">Track</a>
+    <a href="report.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a">Report</a>
+    <a href="profile.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a">Profile</a>
+  </div>
+  <div class="flex min-w-[150px] items-center justify-end max-[640px]:min-w-0" id="homeNavSide">
+    <a href="signup.html" class="rounded-[10px] border border-white/20 bg-white/10 px-[18px] py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white no-underline">Sign In</a>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home">
+
+  <!-- HERO -->
+  <section class="flex min-h-screen flex-col justify-center px-7 pb-20 pt-[120px] max-[640px]:px-4 max-[640px]:pb-[60px] max-[640px]:pt-[132px] bg-hero-gradient bg-cover bg-center">
+    <div class="mx-auto max-w-[760px] text-center">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-emerald-300" id="heroPill">
+        <span class="inline-block h-[7px] w-[7px] rounded-full bg-emerald-400 animate-pulse-slow"></span>
+        <span id="pillTxt">Nigeria's #1 Environmental Platform</span>
+      </div>
+      <div class="mx-auto mb-[18px] inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur">
+        <div>
+          <strong id="homeGreeting" class="text-[13px] text-white">Good Day</strong>
+          <span id="homeGreetingNote" class="text-xs font-extrabold text-emerald-300">Welcome to EcoClean Nigeria.</span>
+        </div>
+        <div class="border-l border-white/15 pl-3.5 text-left">
+          <b id="homeClock" class="block text-[17px] leading-none text-white"></b>
+          <small id="homePeriod" class="mt-1 block text-[10px] uppercase tracking-[0.08em] text-white/45"></small>
+        </div>
+      </div>
+      <h1 class="mb-[18px] text-[clamp(32px,5.8vw,66px)] font-black uppercase leading-[1.18] tracking-[0.16em] animate-hero-glow">
+        <span class="inline-block animate-title-drift">Clean Cities.</span><br>
+        <span class="inline-block animate-title-drift bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-200 bg-clip-text text-transparent">Green Future.</span><br>
+        <span class="inline-block animate-title-drift">Better Nigeria.</span>
+      </h1>
+      <p class="mx-auto mb-8 max-w-[620px] text-[clamp(15px,2vw,19px)] leading-[1.72] text-white/70">
+        Report waste issues in your community, connect with verified agencies, and track every case from submission to resolution all in one place.
+      </p>
+      <div class="mb-11 flex flex-wrap justify-center gap-3">
+        <a href="report.html" class="inline-block cursor-pointer rounded-[14px] border-0 bg-gradient-to-br from-emerald-500 to-emerald-600 px-8 py-[15px] text-[15px] font-extrabold text-white no-underline shadow-[0_6px_22px_rgba(16,185,129,0.4)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(16,185,129,0.5)]">Submit a Report</a>
+        <a href="track.html" class="inline-block cursor-pointer rounded-[14px] border border-white/30 bg-white/10 px-7 py-3.5 text-[15px] font-bold text-white no-underline transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20">Track My Report</a>
+      </div>
+      <div class="flex flex-wrap justify-center gap-2.5">
+        <div class="rounded-[13px] border border-white/10 bg-white/10 px-[18px] py-[13px]">
+          <p class="mb-0.5 text-[21px] font-black text-emerald-400">12,480+</p>
+          <p class="text-[11px] text-white/40">Reports Filed</p>
+        </div>
+        <div class="rounded-[13px] border border-white/10 bg-white/10 px-[18px] py-[13px]">
+          <p class="mb-0.5 text-[21px] font-black text-emerald-400">340+</p>
+          <p class="text-[11px] text-white/40">Verified Agencies</p>
+        </div>
+        <div class="rounded-[13px] border border-white/10 bg-white/10 px-[18px] py-[13px]">
+          <p class="mb-0.5 text-[21px] font-black text-emerald-400">89%</p>
+          <p class="text-[11px] text-white/40">Resolution Rate</p>
+        </div>
+        <div class="rounded-[13px] border border-white/10 bg-white/10 px-[18px] py-[13px]">
+          <p class="mb-0.5 text-[21px] font-black text-emerald-400">36</p>
+          <p class="text-[11px] text-white/40">States Covered.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="px-7 py-[76px] max-[640px]:px-4 max-[640px]:py-[50px] bg-gradient-to-br from-[#021a12] via-emerald-900 to-emerald-800">
+    <div class="mx-auto max-w-[980px]">
+      <div class="mb-11 text-center">
+        <div class="mb-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-emerald-300">Simple Process</div>
+        <h2 class="mb-2 text-[clamp(24px,4vw,38px)] font-black tracking-tight">How EcoClean Works</h2>
+        <p class="text-sm text-white/40">Four simple steps to a cleaner community.</p>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3.5">
+        <div class="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.07] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-emerald-500/30 hover:bg-white/10">
+          <div class="absolute right-4 top-3 text-[54px] font-black leading-none text-white/[0.04]">01</div>
+          <div class="mb-3.5 flex h-12 w-12 items-center justify-center rounded-[14px] bg-emerald-100 text-[22px] text-emerald-600"></div>
+          <h3 class="mb-[7px] text-[15px] font-extrabold">Report the Issue</h3>
+          <p class="text-[13px] leading-[1.65] text-white/45">Describe the waste issue, pick your location from all 36 states and LGAs, attach a photo and submit in under 2 minutes.</p>
+        </div>
+        <div class="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.07] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-emerald-500/30 hover:bg-white/10">
+          <div class="absolute right-4 top-3 text-[54px] font-black leading-none text-white/[0.04]">02</div>
+          <div class="mb-3.5 flex h-12 w-12 items-center justify-center rounded-[14px] bg-blue-100 text-[22px] text-blue-500"></div>
+          <h3 class="mb-[7px] text-[15px] font-extrabold">Agency Assigned</h3>
+          <p class="text-[13px] leading-[1.65] text-white/45">The nearest verified agency — government or private — is automatically notified and assigned to your case.</p>
+        </div>
+        <div class="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.07] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-emerald-500/30 hover:bg-white/10">
+          <div class="absolute right-4 top-3 text-[54px] font-black leading-none text-white/[0.04]">03</div>
+          <div class="mb-3.5 flex h-12 w-12 items-center justify-center rounded-[14px] bg-amber-100 text-[22px] text-amber-500"></div>
+          <h3 class="mb-[7px] text-[15px] font-extrabold">Track in Real Time</h3>
+          <p class="text-[13px] leading-[1.65] text-white/45">Get notified at every step. Track your report live from submission all the way to full resolution.</p>
+        </div>
+        <div class="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.07] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-emerald-500/30 hover:bg-white/10">
+          <div class="absolute right-4 top-3 text-[54px] font-black leading-none text-white/[0.04]">04</div>
+          <div class="mb-3.5 flex h-12 w-12 items-center justify-center rounded-[14px] bg-emerald-100 text-[22px] text-emerald-600"></div>
+          <h3 class="mb-[7px] text-[15px] font-extrabold">Issue Resolved</h3>
+          <p class="text-[13px] leading-[1.65] text-white/45">The agency resolves the case, you confirm, and your community gets cleaner. Every case is documented.</p>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <a href="report.html" class="inline-block cursor-pointer rounded-[14px] border-0 bg-gradient-to-br from-emerald-500 to-emerald-600 px-8 py-[15px] text-[15px] font-extrabold text-white no-underline shadow-[0_6px_22px_rgba(16,185,129,0.4)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(16,185,129,0.5)]">Submit Your First Report</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE REPORTS -->
+  <section class="px-7 py-[76px] max-[640px]:px-4 max-[640px]:py-[50px] bg-gradient-to-br from-[#031f12] via-[#054030] to-[#055040]">
+    <div class="mx-auto max-w-[980px]">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-emerald-300">
+            <span class="inline-block h-[7px] w-[7px] rounded-full bg-emerald-400 animate-pulse-slow"></span> Live Feed
+          </div>
+          <h2 class="mb-2 text-[clamp(20px,3.5vw,32px)] font-black tracking-tight">Recent Reports</h2>
+          <p class="mt-1 text-[13px] text-white/35">Latest reports submitted across Nigeria</p>
+        </div>
+        <a href="track.html" class="rounded-[10px] border border-emerald-500/20 bg-emerald-500/10 px-4 py-[9px] text-[13px] font-bold text-emerald-400 no-underline">View All</a>
+      </div>
+      <div id="liveReports"></div>
+    </div>
+  </section>
+
+  <!-- AGENCIES -->
+  <section class="px-7 py-[76px] max-[640px]:px-4 max-[640px]:py-[50px] bg-gradient-to-br from-[#021a12] via-emerald-900 to-emerald-800">
+    <div class="mx-auto max-w-[980px]">
+      <div class="mb-11 text-center">
+        <div class="mb-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-emerald-300">Verified Partners</div>
+        <h2 class="mb-2 text-[clamp(20px,3.5vw,32px)] font-black tracking-tight">Featured Agencies</h2>
+        <p class="text-sm text-white/40">Trusted environmental agencies ready to respond.</p>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3.5" id="agencyGrid"></div>
+      <div class="mt-6 text-center">
+        <a href="track.html" class="inline-block cursor-pointer rounded-[14px] border border-white/30 bg-white/10 px-7 py-3.5 text-[15px] font-bold text-white no-underline transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20">Find Agency in Your State</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section class="px-7 py-[76px] max-[640px]:px-4 max-[640px]:py-[50px] bg-gradient-to-br from-[#011208] via-[#042e20] to-[#043824]">
+    <div class="mx-auto max-w-[980px] text-center">
+      <div class="mb-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-emerald-300">Our Impact</div>
+      <h2 class="mb-10 text-[clamp(22px,4vw,38px)] font-black tracking-tight">Making a Real Difference</h2>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3.5">
+        <div class="rounded-2xl border border-white/10 bg-white/10 p-5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15">
+          <p class="mb-1 text-[38px] font-black text-emerald-300">12k+</p>
+          <p class="text-[13px] text-white/40">Reports Filed</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/10 p-5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15">
+          <p class="mb-1 text-[38px] font-black text-sky-300">340+</p>
+          <p class="text-[13px] text-white/40">Agencies</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/10 p-5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15">
+          <p class="mb-1 text-[38px] font-black text-amber-300">89%</p>
+          <p class="text-[13px] text-white/40">Resolved</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/10 p-5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15">
+          <p class="mb-1 text-[38px] font-black text-fuchsia-300">36</p>
+          <p class="text-[13px] text-white/40">States</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/10 p-5 text-center transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/15">
+          <p class="mb-1 text-[38px] font-black text-emerald-200">50k+</p>
+          <p class="text-[13px] text-white/40">Citizens</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="px-7 py-[76px] max-[640px]:px-4 max-[640px]:py-[50px] bg-gradient-to-br from-[#031f12] via-[#054030] to-[#055040]">
+    <div class="mx-auto max-w-[980px]">
+      <div class="mb-[34px] text-center">
+        <div class="mb-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-emerald-300">Real Stories</div>
+        <h2 class="mb-2 text-[clamp(20px,3.5vw,32px)] font-black tracking-tight">What Nigerians Are Saying</h2>
+        <p class="text-sm text-white/40">Real citizens. Real results.</p>
+      </div>
+      <div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3.5" id="testiGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-emerald-800 to-emerald-500 px-7 py-[68px] text-center">
+    <div class="absolute -right-[50px] -top-[50px] h-[260px] w-[260px] rounded-full bg-white/5"></div>
+    <div class="absolute -bottom-[60px] -left-[30px] h-[220px] w-[220px] rounded-full bg-black/10"></div>
+    <div class="relative z-[1] mx-auto max-w-[560px]">
+      <h2 class="mb-2.5 text-[clamp(22px,4vw,40px)] font-black tracking-tight">Ready to Make a Change?</h2>
+      <p class="mb-7 text-[15px] leading-[1.65] text-white/80">Join 50,000+ Nigerians already reporting waste issues and building cleaner communities.</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="signup.html" class="inline-block cursor-pointer rounded-[14px] border border-white/30 bg-white/10 px-7 py-3.5 text-[15px] font-bold text-white no-underline transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20">Join as Citizen</a>
+        <a href="signup.html" class="inline-block cursor-pointer rounded-[14px] border-0 bg-gradient-to-br from-emerald-500 to-emerald-600 px-8 py-[15px] text-[15px] font-extrabold text-white no-underline shadow-[0_6px_22px_rgba(16,185,129,0.4)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(16,185,129,0.5)]">Register Agency</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/[0.06] bg-[#011208] px-7 pb-6 pt-12">
+    <div class="mb-8 grid gap-6 md:grid-cols-[2fr_1fr_1fr_1fr]">
+      <div>
+        <div class="mb-2.5 flex items-center gap-2">
+          <div class="flex h-8 w-8 items-center justify-center rounded-[9px] bg-gradient-to-br from-emerald-500 to-emerald-600 text-[11px] font-black text-white">EC</div>
+          <span class="text-[17px] font-black">EcoClean <span class="text-emerald-400">Nigeria</span></span>
+        </div>
+        <p class="text-xs text-white/30 no-underline">Nigeria's student-led environmental restoration platform connecting citizens with agencies.</p>
+      </div>
+      <div class="flex flex-col gap-[7px]">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-[0.07em] text-white/55 no-underline">Platform</p>
+        <a href="Index.html" class="text-xs text-white/30 no-underline">Home</a>
+        <a href="report.html" class="text-xs text-white/30 no-underline">Submit Report</a>
+        <a href="track.html" class="text-xs text-white/30 no-underline">Track Report</a>
+        <a href="profile.html" class="text-xs text-white/30 no-underline">My Profile</a>
+      </div>
+      <div class="flex flex-col gap-[7px]">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-[0.07em] text-white/55 no-underline">Account</p>
+        <a href="signup.html" class="text-xs text-white/30 no-underline">Sign Up</a>
+        <a href="signup.html" class="text-xs text-white/30 no-underline">Sign In</a>
+      </div>
+      <div class="flex flex-col gap-[7px]">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-[0.07em] text-white/55 no-underline">Contact</p>
+        <p class="text-xs text-white/30 no-underline">hello@ecoclean.ng</p>
+        <p class="text-xs text-white/30 no-underline">08012345678</p>
+        <p class="text-xs text-white/30 no-underline">Asaba, Delta State</p>
+      </div>
+    </div>
+    <div class="mb-4 h-px bg-white/[0.06]"></div>
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <p class="text-[11px] text-white/20">2026 EcoClean Nigeria. All rights reserved.</p>
+      <p class="text-[11px] text-white/20">Built with for a cleaner Nigeria</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+//   NAV SCROLL  
+window.addEventListener('scroll',function(){
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>55);
+});
+
+//   WELCOME PILL  
+var un = localStorage.getItem('eco_user_name');
+if(un){ document.getElementById('pillTxt').textContent='Welcome back, '+un.split(' ')[0]+'!  '; }
+
+function renderHomeIdentity() {
+  var name = ecoDisplayName();
+  var role = localStorage.getItem('eco_role') === 'agency' ? 'Agency' : 'Citizen';
+  var side = document.getElementById('homeNavSide');
+  if (!side) return;
+  if (localStorage.getItem('eco_user_name') || localStorage.getItem('eco_agency_name') || localStorage.getItem('eco_email')) {
+    side.innerHTML =
+      '<a href="profile.html" class="flex items-center gap-2.5 text-white no-underline">' +
+        '<div class="text-right leading-[1.15]">' +
+          '<div class="max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap text-xs font-extrabold" data-eco-full-name>' + name + '</div>' +
+          '<div class="text-[10px] uppercase tracking-[0.08em] text-white/40">' + role + '</div>' +
+        '</div>' +
+        '<div class="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-[13px] font-black shadow-[0_4px_14px_rgba(16,185,129,0.35)]" id="navAvatar">' + ecoInitials(name) + '</div>' +
+      '</a>';
+  }
+}
+
+function updateHomeGreeting() {
+  var now = new Date();
+  var hour = now.getHours();
+  var name = localStorage.getItem('eco_user_name') || localStorage.getItem('eco_agency_name') || '';
+  document.getElementById('homeGreeting').textContent = ecoGreeting() + (name ? ', ' + name.split(' ')[0] : '');
+  document.getElementById('homeGreetingNote').textContent = hour < 18 ? 'A good time to help keep your community clean.' : 'Even at night, your reports can be saved and tracked.';
+  document.getElementById('homeClock').textContent = ecoFormatClock(now);
+  document.getElementById('homePeriod').textContent = hour < 12 ? 'Morning' : (hour < 17 ? 'Afternoon' : 'Evening');
+}
+renderHomeIdentity();
+updateHomeGreeting();
+setInterval(updateHomeGreeting, 30000);
+
+//   LIVE REPORTS  
+var LIVE=[
+  {id:'EC-88201',issue:'Illegal dumping behind market',    loc:'Oshodi, Lagos',         st:'Ongoing',              t:'2 mins ago'},
+  {id:'EC-77340',issue:'Blocked drainage flooding street', loc:'Wuse, FCT Abuja',       st:'Assigned',             t:'14 mins ago'},
+  {id:'EC-65129',issue:'Open burning near school',         loc:'Enugu North, Enugu',    st:'Waiting for Approval', t:'31 mins ago'},
+  {id:'EC-54880',issue:'Industrial discharge into river',  loc:'Port Harcourt, Rivers', st:'Resolved',             t:'1 hr ago'},
+  {id:'EC-43201',issue:'Uncollected refuse for 2 weeks',   loc:'Ibadan, Oyo',           st:'Ongoing',              t:'2 hrs ago'},
+];
+var BM={'Ongoing':'border-blue-500/30 bg-blue-500/15 text-blue-300','Waiting for Approval':'border-amber-500/30 bg-amber-500/15 text-amber-400','Assigned':'border-emerald-500/30 bg-emerald-500/15 text-emerald-400','Resolved':'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'};
+var lrEl=document.getElementById('liveReports');
+LIVE.forEach(function(r){
+  var d=document.createElement('div');
+  d.className='mb-2.5 flex cursor-pointer items-start gap-3 rounded-[13px] border border-white/10 bg-white/[0.05] px-4 py-3.5 transition hover:border-white/15 hover:bg-white/10';
+  d.onclick=function(){window.location.href='track.html';};
+  d.innerHTML='<div class="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[11px] bg-white/[0.07] text-[17px]"></div><div class="min-w-0 flex-1"><div class="mb-1 flex flex-wrap items-center gap-[7px]"><span class="text-[13px] font-extrabold text-emerald-400">'+r.id+'</span><span class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.05em] '+(BM[r.st]||'')+'">'+r.st+'</span></div><p class="mb-0.5 text-[13px] font-semibold text-white/80">'+r.issue+'</p><p class="text-[11px] text-white/30">'+r.loc+'     '+r.t+'</p></div><span class="shrink-0 text-[17px] text-white/20"></span>';
+  lrEl.appendChild(d);
+});
+
+//   AGENCIES  
+var AG=[
+  {name:'Delta State DELSEPA',         type:'Government',state:'Delta',    rating:'4.8',rep:142},
+  {name:'GreenForce Lagos Ltd',        type:'Private',   state:'Lagos',    rating:'4.9',rep:318},
+  {name:'Abuja Env. Protection Agency',type:'Government',state:'FCT Abuja',rating:'4.6',rep:97},
+  {name:'CleanRivers Contractors',     type:'Private',   state:'Rivers',   rating:'4.7',rep:203},
+];
+var agEl=document.getElementById('agencyGrid');
+AG.forEach(function(a){
+  var g=a.type==='Government';
+  var d=document.createElement('div');
+  d.className='rounded-[18px] border border-white/10 bg-white/[0.07] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-emerald-500/30 hover:bg-white/10';
+  d.innerHTML='<div class="mb-3 flex items-center gap-2.5"><div class="flex h-[42px] w-[42px] items-center justify-center rounded-xl text-[19px] '+(g?'bg-blue-500/15':'bg-emerald-500/15')+'">'+(g?' ':' ')+'</div><div><p class="text-sm font-extrabold">'+a.name+'</p><span class="mt-1 inline-block rounded-full px-2.5 py-1 text-[10px] font-extrabold '+(g?'border border-blue-500/30 bg-blue-500/15 text-blue-300':'border border-emerald-500/30 bg-emerald-500/15 text-emerald-400')+'">'+a.type+'</span></div></div><p class="mb-3 text-xs text-white/35">'+a.state+'     '+a.rating+'     '+a.rep+' reports</p><a href="track.html" class="inline-flex cursor-pointer items-center justify-center gap-1 rounded-[10px] border border-emerald-500/30 bg-emerald-500/15 px-[13px] py-[9px] text-xs font-bold text-emerald-400 no-underline transition hover:brightness-125 active:scale-95">Contact Agency</a>';
+  agEl.appendChild(d);
+});
+
+//   TESTIMONIALS  
+var TS=[
+  {n:'Chioma Obi',      s:'Delta',    t:'I reported an illegal dump site behind my street and within 3 days an agency cleared it. EcoClean actually works!',st:5},
+  {n:'Emeka Nwachukwu', s:'Lagos',    t:'The tracking feature is amazing. I could see exactly what stage my report was at every day. Very professional.',st:5},
+  {n:'Fatima Al-Hassan',s:'Kano',     t:'I was sceptical at first but they assigned a government agency to my report in less than 24 hours. Very impressive.',st:5},
+  {n:'Tunde Adeyemi',   s:'Oyo',      t:'Finally a platform that takes environmental issues seriously in Nigeria. My first report was resolved in 5 days.',st:4},
+  {n:'Ngozi Eze',       s:'Enugu',    t:'The EcoClean team is doing God\'s work. My community stream is now clean thanks to this platform.',st:5},
+  {n:'Musa Ibrahim',    s:'FCT Abuja',t:'Simple, fast, and it actually works. I\'ve submitted 3 reports and all 3 were handled properly.',st:5},
+];
+var tgEl=document.getElementById('testiGrid');
+TS.forEach(function(t){
+  var d=document.createElement('div');
+  d.className='rounded-[18px] border border-white/10 bg-white/[0.06] p-6 transition hover:bg-white/10';
+  d.innerHTML='<div class="mb-2.5 flex gap-0.5">'+Array(t.st).fill('<span class="text-[13px] text-amber-400"></span>').join('')+Array(5-t.st).fill('<span class="text-[13px] text-white/10"></span>').join('')+'</div><p class="mb-3.5 text-[13px] leading-[1.7] text-white/65">"'+t.t+'"</p><div class="flex items-center gap-[9px]"><div class="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-[13px] font-extrabold">'+t.n[0]+'</div><div><p class="text-[13px] font-bold">'+t.n+'</p><p class="mt-px text-[11px] text-white/30">'+t.s+'</p></div></div>';
+  tgEl.appendChild(d);
+});
+
+ecoApplySharedUI();
+</script>
+</body>
+</html>
