@@ -63,6 +63,19 @@ tailwind.config = {
   background: #10b981;
   color: white;
 }
+.nav-a:hover,
+#mobileNav a:hover {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  transform: translateX(2px);
+}
+#mobileNav a {
+  transition: all 0.2s ease;
+}
+#navToggle:hover {
+  background: rgba(16,185,129,0.18);
+  border-color: rgba(110,231,183,0.6);
+}
 .hero-title .title-line:nth-child(3) {
   animation-delay: 0.35s;
 }
@@ -80,21 +93,35 @@ tailwind.config = {
 <body class="overflow-x-hidden bg-[#021a12] font-sans text-white">
 
 <!-- NAVBAR -->
-<nav class="fixed inset-x-0 top-0 z-[100] grid grid-cols-[auto_1fr_auto] items-center gap-3.5 px-7 py-3.5 max-[640px]:grid-cols-[1fr_auto] max-[640px]:px-4 max-[640px]:py-3 topnav" id="nav">
-  <div class="flex min-w-max items-center gap-2.5">
-    <div class="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-emerald-500 to-emerald-600 text-xs font-black">EC</div>
-    <span class="text-[17px] font-black">EcoClean <span class="text-emerald-400">Nigeria</span></span>
-  </div>
-  <div class="flex flex-wrap items-center justify-center gap-[18px] max-[640px]:order-3 max-[640px]:col-span-2">
-    <a href="index.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a on">Home</a>
-    <a href="track.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a">Track</a>
-    <a href="report.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a">Report</a>
-    <a href="profile.html" class="rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white nav-a">Profile</a>
-  </div>
-  <div class="flex min-w-[150px] items-center justify-end max-[640px]:min-w-0" id="homeNavSide">
-    <a href="signup.html" class="rounded-[10px] border border-white/20 bg-white/10 px-[18px] py-2 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white no-underline">Sign In</a>
+<nav class="fixed inset-x-0 top-0 z-[100] border-b border-white/10 bg-[#021a12]/85 backdrop-blur-md topnav" id="nav">
+  <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+    <div class="flex min-w-0 items-center gap-2.5">
+      <div class="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-emerald-500 to-emerald-600 text-xs font-black">EC</div>
+      <span class="text-[15px] font-black sm:text-[17px]">EcoClean <span class="hidden text-emerald-400 sm:inline">Nigeria</span></span>
+    </div>
+
+    <div id="navLinks" class="hidden items-center justify-center gap-1 md:flex">
+      <a href="index.html" class="nav-a on rounded-[10px] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white sm:text-[12px]">Home</a>
+      <a href="track.html" class="nav-a rounded-[10px] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white sm:text-[12px]">Track</a>
+      <a href="report.html" class="nav-a rounded-[10px] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white sm:text-[12px]">Report</a>
+      <a href="profile.html" class="nav-a rounded-[10px] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white sm:text-[12px]">Profile</a>
+    </div>
+
+    <div class="flex items-center justify-end gap-2 sm:gap-3" id="homeNavSide">
+      <a href="signup.html" class="hidden rounded-[10px] border border-white/20 bg-white/10 px-[16px] py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white no-underline sm:inline-flex">Sign In</a>
+    </div>
   </div>
 </nav>
+
+<div id="mobileNav" class="fixed left-3 top-[68px] z-[90] hidden w-[78vw] max-w-[280px] rounded-2xl border border-white/10 bg-[#021a12]/95 p-3 shadow-[0_18px_40px_rgba(2,26,18,0.55)] backdrop-blur-md md:hidden">
+  <div class="flex flex-col gap-2">
+    <a href="index.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline transition hover:bg-white/10 hover:text-white">Home</a>
+    <a href="track.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline transition hover:bg-white/10 hover:text-white">Track</a>
+    <a href="report.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline transition hover:bg-white/10 hover:text-white">Report</a>
+    <a href="profile.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline transition hover:bg-white/10 hover:text-white">Profile</a>
+    <a href="signup.html" class="mt-2 inline-block rounded-[10px] border border-white/20 bg-white/10 px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white no-underline">Sign In</a>
+  </div>
+</div>
 
 <!-- HOME PAGE -->
 <div id="page-home">
@@ -329,16 +356,60 @@ function renderHomeIdentity() {
   var role = localStorage.getItem('eco_role') === 'agency' ? 'Agency' : 'Citizen';
   var side = document.getElementById('homeNavSide');
   if (!side) return;
+
+  var toggleMarkup = '<button id="navToggle" aria-expanded="false" class="inline-flex h-10 items-center gap-2 rounded-xl border border-emerald-300/60 bg-gradient-to-r from-emerald-500/30 to-emerald-400/20 px-3 text-[11px] font-extrabold uppercase tracking-[0.08em] text-emerald-50 shadow-[0_6px_18px_rgba(16,185,129,0.28)] transition hover:brightness-110 md:hidden" aria-label="Open navigation"><span class="text-lg">☰</span><span>Menu</span></button>';
+
   if (localStorage.getItem('eco_user_name') || localStorage.getItem('eco_agency_name') || localStorage.getItem('eco_email')) {
     side.innerHTML =
-      '<a href="profile.html" class="flex items-center gap-2.5 text-white no-underline">' +
-        '<div class="text-right leading-[1.15]">' +
-          '<div class="max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap text-xs font-extrabold" data-eco-full-name>' + name + '</div>' +
-          '<div class="text-[10px] uppercase tracking-[0.08em] text-white/40">' + role + '</div>' +
+      '<div class="flex items-center gap-2.5 rounded-[12px] border border-white/10 bg-white/5 px-2 py-1.5 pr-3">' +
+        '<div class="text-right leading-[1.1]">' +
+          '<div class="max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap text-[11px] font-extrabold text-white" data-eco-full-name>' + name + '</div>' +
+          '<div class="text-[9px] uppercase tracking-[0.08em] text-white/45">' + role + '</div>' +
         '</div>' +
-        '<div class="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-[13px] font-black shadow-[0_4px_14px_rgba(16,185,129,0.35)]" id="navAvatar">' + ecoInitials(name) + '</div>' +
-      '</a>';
+        '<div class="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-[12px] font-black shadow-[0_4px_14px_rgba(16,185,129,0.35)]" id="navAvatar">' + ecoInitials(name) + '</div>' +
+      '</div>' +
+      toggleMarkup;
+  } else {
+    side.innerHTML =
+      '<a href="signup.html" class="inline-flex rounded-[10px] border border-white/20 bg-white/10 px-[16px] py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white no-underline">Sign In</a>' +
+      toggleMarkup;
   }
+
+  bindHomeMobileNav();
+}
+
+function bindHomeMobileNav() {
+  var toggle = document.getElementById('navToggle');
+  var mobileNav = document.getElementById('mobileNav');
+  if (!toggle || !mobileNav) return;
+
+  function closeMobileNav() {
+    mobileNav.classList.add('hidden');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  if (toggle.dataset.bound === 'true') return;
+  toggle.dataset.bound = 'true';
+
+  toggle.addEventListener('click', function () {
+    var shouldOpen = mobileNav.classList.contains('hidden');
+    mobileNav.classList.toggle('hidden', !shouldOpen);
+    toggle.setAttribute('aria-expanded', String(shouldOpen));
+  });
+
+  mobileNav.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      closeMobileNav();
+    });
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth >= 768) closeMobileNav();
+  });
+
+  window.addEventListener('scroll', function () {
+    if (!mobileNav.classList.contains('hidden')) closeMobileNav();
+  });
 }
 
 function updateHomeGreeting() {
@@ -353,59 +424,6 @@ function updateHomeGreeting() {
 renderHomeIdentity();
 updateHomeGreeting();
 setInterval(updateHomeGreeting, 30000);
-
-//   LIVE REPORTS  
-var LIVE=[
-  {id:'EC-88201',issue:'Illegal dumping behind market',    loc:'Oshodi, Lagos',         st:'Ongoing',              t:'2 mins ago'},
-  {id:'EC-77340',issue:'Blocked drainage flooding street', loc:'Wuse, FCT Abuja',       st:'Assigned',             t:'14 mins ago'},
-  {id:'EC-65129',issue:'Open burning near school',         loc:'Enugu North, Enugu',    st:'Waiting for Approval', t:'31 mins ago'},
-  {id:'EC-54880',issue:'Industrial discharge into river',  loc:'Port Harcourt, Rivers', st:'Resolved',             t:'1 hr ago'},
-  {id:'EC-43201',issue:'Uncollected refuse for 2 weeks',   loc:'Ibadan, Oyo',           st:'Ongoing',              t:'2 hrs ago'},
-];
-var BM={'Ongoing':'border-blue-500/30 bg-blue-500/15 text-blue-300','Waiting for Approval':'border-amber-500/30 bg-amber-500/15 text-amber-400','Assigned':'border-emerald-500/30 bg-emerald-500/15 text-emerald-400','Resolved':'border-emerald-500/30 bg-emerald-500/15 text-emerald-400'};
-var lrEl=document.getElementById('liveReports');
-LIVE.forEach(function(r){
-  var d=document.createElement('div');
-  d.className='mb-2.5 flex cursor-pointer items-start gap-3 rounded-[13px] border border-white/10 bg-white/[0.05] px-4 py-3.5 transition hover:border-white/15 hover:bg-white/10';
-  d.onclick=function(){window.location.href='track.html';};
-  d.innerHTML='<div class="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[11px] bg-white/[0.07] text-[17px]"></div><div class="min-w-0 flex-1"><div class="mb-1 flex flex-wrap items-center gap-[7px]"><span class="text-[13px] font-extrabold text-emerald-400">'+r.id+'</span><span class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.05em] '+(BM[r.st]||'')+'">'+r.st+'</span></div><p class="mb-0.5 text-[13px] font-semibold text-white/80">'+r.issue+'</p><p class="text-[11px] text-white/30">'+r.loc+'     '+r.t+'</p></div><span class="shrink-0 text-[17px] text-white/20"></span>';
-  lrEl.appendChild(d);
-});
-
-//   AGENCIES  
-var AG=[
-  {name:'Delta State DELSEPA',         type:'Government',state:'Delta',    rating:'4.8',rep:142},
-  {name:'GreenForce Lagos Ltd',        type:'Private',   state:'Lagos',    rating:'4.9',rep:318},
-  {name:'Abuja Env. Protection Agency',type:'Government',state:'FCT Abuja',rating:'4.6',rep:97},
-  {name:'CleanRivers Contractors',     type:'Private',   state:'Rivers',   rating:'4.7',rep:203},
-];
-var agEl=document.getElementById('agencyGrid');
-AG.forEach(function(a){
-  var g=a.type==='Government';
-  var d=document.createElement('div');
-  d.className='rounded-[18px] border border-white/10 bg-white/[0.07] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-emerald-500/30 hover:bg-white/10';
-  d.innerHTML='<div class="mb-3 flex items-center gap-2.5"><div class="flex h-[42px] w-[42px] items-center justify-center rounded-xl text-[19px] '+(g?'bg-blue-500/15':'bg-emerald-500/15')+'">'+(g?' ':' ')+'</div><div><p class="text-sm font-extrabold">'+a.name+'</p><span class="mt-1 inline-block rounded-full px-2.5 py-1 text-[10px] font-extrabold '+(g?'border border-blue-500/30 bg-blue-500/15 text-blue-300':'border border-emerald-500/30 bg-emerald-500/15 text-emerald-400')+'">'+a.type+'</span></div></div><p class="mb-3 text-xs text-white/35">'+a.state+'     '+a.rating+'     '+a.rep+' reports</p><a href="track.html" class="inline-flex cursor-pointer items-center justify-center gap-1 rounded-[10px] border border-emerald-500/30 bg-emerald-500/15 px-[13px] py-[9px] text-xs font-bold text-emerald-400 no-underline transition hover:brightness-125 active:scale-95">Contact Agency</a>';
-  agEl.appendChild(d);
-});
-
-//   TESTIMONIALS  
-var TS=[
-  {n:'Chioma Obi',      s:'Delta',    t:'I reported an illegal dump site behind my street and within 3 days an agency cleared it. EcoClean actually works!',st:5},
-  {n:'Emeka Nwachukwu', s:'Lagos',    t:'The tracking feature is amazing. I could see exactly what stage my report was at every day. Very professional.',st:5},
-  {n:'Fatima Al-Hassan',s:'Kano',     t:'I was sceptical at first but they assigned a government agency to my report in less than 24 hours. Very impressive.',st:5},
-  {n:'Tunde Adeyemi',   s:'Oyo',      t:'Finally a platform that takes environmental issues seriously in Nigeria. My first report was resolved in 5 days.',st:4},
-  {n:'Ngozi Eze',       s:'Enugu',    t:'The EcoClean team is doing God\'s work. My community stream is now clean thanks to this platform.',st:5},
-  {n:'Musa Ibrahim',    s:'FCT Abuja',t:'Simple, fast, and it actually works. I\'ve submitted 3 reports and all 3 were handled properly.',st:5},
-];
-var tgEl=document.getElementById('testiGrid');
-TS.forEach(function(t){
-  var d=document.createElement('div');
-  d.className='rounded-[18px] border border-white/10 bg-white/[0.06] p-6 transition hover:bg-white/10';
-  d.innerHTML='<div class="mb-2.5 flex gap-0.5">'+Array(t.st).fill('<span class="text-[13px] text-amber-400"></span>').join('')+Array(5-t.st).fill('<span class="text-[13px] text-white/10"></span>').join('')+'</div><p class="mb-3.5 text-[13px] leading-[1.7] text-white/65">"'+t.t+'"</p><div class="flex items-center gap-[9px]"><div class="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-[13px] font-extrabold">'+t.n[0]+'</div><div><p class="text-[13px] font-bold">'+t.n+'</p><p class="mt-px text-[11px] text-white/30">'+t.s+'</p></div></div>';
-  tgEl.appendChild(d);
-});
-
-ecoApplySharedUI();
 </script>
 </body>
 </html>
