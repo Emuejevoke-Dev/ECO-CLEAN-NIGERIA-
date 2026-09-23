@@ -73,36 +73,59 @@
     #dm_after_wrap img { height:100%; object-fit:cover; display:block; }
     #dm_media_slider_input { accent-color:#34d399; }
     #dm_media_slider_value { font-weight:700; }
+
+    #navAvatar {
+      line-height: 1;
+    }
+    @media (max-width: 767px) {
+      #profileNavUser {
+        gap: 6px;
+      }
+    }
   </style>
 </head>
 <body class="bg-profile-gradient bg-fixed min-h-screen text-white">
 
 <!-- NAV -->
-<nav class="bg-[rgba(2,26,18,0.88)] border-b border-white/10 sticky top-0 z-50 px-6 py-3.5 grid grid-cols-[auto_1fr_auto] items-center gap-3.5 max-sm:grid-cols-[1fr_auto]">
-  <div class="flex items-center gap-2.5 min-w-max">
-    <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center font-black text-xs text-white flex-shrink-0">EC</div>
-    <span class="font-black text-base text-white">EcoClean <span class="text-emerald-300">Nigeria</span></span>
-  </div>
-  <div class="flex justify-center gap-4.5 flex-wrap max-sm:col-span-full max-sm:order-3">
-    <a href="index.html" class="px-3.5 py-2 rounded-[10px] text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/55 hover:bg-white/10 hover:text-white transition duration-150 no-underline">Home</a>
-    <a href="track.html" class="px-3.5 py-2 rounded-[10px] text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/55 hover:bg-white/10 hover:text-white transition duration-150 no-underline">Track</a>
-    <a href="report.html" class="px-3.5 py-2 rounded-[10px] text-[13px] font-extrabold uppercase tracking-[0.08em] text-white/55 hover:bg-white/10 hover:text-white transition duration-150 no-underline">Report</a>
-    <a href="profile.html" class="px-3.5 py-2 rounded-[10px] text-[13px] font-extrabold uppercase tracking-[0.08em] bg-emerald-500 text-white transition duration-150 no-underline">Profile</a>
-  </div>
-  <div class="flex items-center justify-end gap-2.5 min-w-[180px]">
-    <button class="relative w-[38px] h-[38px] rounded-full border border-amber-400/45 bg-amber-400/15 text-amber-400 flex items-center justify-center text-lg cursor-pointer hover:bg-amber-400 hover:text-[#3f2f00] hover:shadow-[0_6px_18px_rgba(250,204,21,0.28)] transition-all duration-150" id="tab-notifications" onclick="showTab('notifications')" title="Notifications">
-      🔔
-      <span id="notificationCount" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white border-2 border-[#021a12] text-[10px] font-black leading-[14px] flex items-center justify-center">0</span>
-    </button>
-    <div class="text-right leading-[1.15] min-w-0">
-      <div id="navName" data-eco-full-name class="text-xs font-extrabold text-white whitespace-nowrap max-w-[150px] overflow-hidden text-ellipsis"></div>
-      <div id="navEmail" class="text-[11px] text-white/50 whitespace-nowrap max-w-[160px] overflow-hidden text-ellipsis"></div>
-      <div class="text-[10px] uppercase tracking-[0.08em] text-white/40">Citizen</div>
+<nav class="sticky top-0 z-50 border-b border-white/10 bg-[rgba(2,26,18,0.88)] backdrop-blur-md">
+  <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+    <div class="flex min-w-0 items-center gap-2.5">
+      <div class="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-emerald-500 to-emerald-600 text-xs font-black">EC</div>
+      <span class="text-[15px] font-black sm:text-[17px]">EcoClean <span class="hidden text-emerald-400 sm:inline">Nigeria</span></span>
     </div>
-    <div id="navAvatar" class="w-[38px] h-[38px] rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center font-black text-sm text-white"></div>
-    <button class="bg-transparent text-white/60 font-bold border border-white/20 rounded-2xl px-4 py-1.5 text-xs cursor-pointer hover:border-white/40 hover:text-white transition-all duration-150" onclick="logout()">Sign Out</button>
+
+    <div id="navLinks" class="hidden items-center justify-center gap-1 md:flex">
+      <a href="index.html" class="rounded-[10px] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white sm:text-[12px]">Home</a>
+      <a href="track.html" class="rounded-[10px] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white sm:text-[12px]">Track</a>
+      <a href="report.html" class="rounded-[10px] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white/60 no-underline transition-all duration-150 hover:bg-white/10 hover:text-white sm:text-[12px]">Report</a>
+      <a href="profile.html" class="rounded-[10px] bg-emerald-500 px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white no-underline transition-all duration-150 sm:text-[12px]">Profile</a>
+    </div>
+
+    <div class="flex items-center justify-end gap-2 sm:gap-3">
+      <button class="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-amber-400/45 bg-amber-400/15 text-lg text-amber-400 transition hover:bg-amber-400 hover:text-[#3f2f00]" id="tab-notifications" onclick="showTab('notifications')" title="Notifications">
+        🔔
+        <span id="notificationCount" class="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-[#021a12] bg-red-500 px-1 text-[10px] font-black text-white">0</span>
+      </button>
+      <div id="profileNavUser" class="flex shrink-0 items-center gap-2.5 rounded-[12px] border border-white/10 bg-white/5 px-2 py-1.5 pr-3">
+        <div class="text-right leading-[1.1] max-sm:block">
+          <div id="navName" data-eco-full-name class="max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap text-[11px] font-extrabold text-white"></div>
+          <div class="text-[9px] uppercase tracking-[0.08em] text-white/45">Citizen</div>
+        </div>
+      <div id="navAvatar" class="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-[12px] font-black text-white"></div>
+      </div>
+      <button id="navToggle" aria-expanded="false" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-lg text-white/80 transition hover:bg-white/10 md:hidden" aria-label="Open navigation">☰</button>
+    </div>
   </div>
 </nav>
+
+<div id="mobileNav" class="fixed left-3 top-[68px] z-[90] hidden w-[78vw] max-w-[280px] rounded-2xl border border-white/10 bg-[#021a12]/95 p-3 shadow-[0_18px_40px_rgba(2,26,18,0.55)] backdrop-blur-md">
+  <div class="flex flex-col gap-1">
+    <a href="index.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline">Home</a>
+    <a href="track.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline">Track</a>
+    <a href="report.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline">Report</a>
+    <a href="profile.html" class="rounded-[10px] px-3 py-2.5 text-[14px] font-extrabold uppercase tracking-[0.08em] text-white/80 no-underline">Profile</a>
+  </div>
+</div>
 
 <!-- WELCOME BANNER -->
 <div class="bg-gradient-to-r from-emerald-500/20 to-emerald-600/10 border-b border-white/10 px-6 py-4.5 flex items-center gap-2.5 flex-wrap">
@@ -124,7 +147,7 @@
         <p id="profileEmail" class="text-[13px] text-white/45 mb-0.5"></p>
         <p id="profileMeta" class="text-[13px] text-white/45"></p>
       </div>
-      <button class="px-4.5 py-2.5 rounded-xl border border-white/20 bg-white/5 text-white font-bold text-[13px] cursor-pointer hover:bg-white/15 transition-all duration-150" onclick="showTab('settings')">Edit Profile</button>
+      <button id="editProfileButton" type="button" class="px-4.5 py-2.5 rounded-xl border border-white/20 bg-white/5 text-white font-bold text-[13px] cursor-pointer hover:bg-white/15 transition-all duration-150">Edit Profile</button>
     </div>
 
     <!-- STAT PILLS -->
@@ -166,11 +189,11 @@
   </div>
 
   <!-- TABS -->
-  <div class="flex gap-1 bg-black/20 p-1.25 rounded-[14px] flex-wrap mb-5">
-    <button class="px-4.5 py-2 rounded-[10px] text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent active:bg-white/15 active:text-white" onclick="showTab('reports')" id="tab-reports">My Reports</button>
-    <button class="px-4.5 py-2 rounded-[10px] text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent active:bg-white/15 active:text-white" onclick="showTab('updates')" id="tab-updates">Location Updates</button>
-    <button class="px-4.5 py-2 rounded-[10px] text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent active:bg-white/15 active:text-white" onclick="showTab('activity')" id="tab-activity">Activity</button>
-    <button class="px-4.5 py-2 rounded-[10px] text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent active:bg-white/15 active:text-white" onclick="showTab('settings')" id="tab-settings">Settings</button>
+  <div class="grid grid-cols-2 gap-2 bg-black/20 p-2 rounded-[14px] mb-5 sm:grid-cols-4">
+    <button type="button" class="w-full min-h-10 px-2 py-2 rounded-[10px] text-[11px] sm:text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent" id="tab-reports" aria-controls="page-reports">My Reports</button>
+    <button type="button" class="w-full min-h-10 px-2 py-2 rounded-[10px] text-[11px] sm:text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent" id="tab-updates" aria-controls="page-updates">Location Updates</button>
+    <button type="button" class="w-full min-h-10 px-2 py-2 rounded-[10px] text-[11px] sm:text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent" id="tab-activity" aria-controls="page-activity">Activity</button>
+    <button type="button" class="w-full min-h-10 px-2 py-2 rounded-[10px] text-[11px] sm:text-[13px] font-bold border-none cursor-pointer transition-all duration-150 text-white/50 bg-transparent" id="tab-settings" aria-controls="page-settings">Settings</button>
   </div>
 
   <!--   TAB: MY REPORTS   -->
@@ -417,6 +440,10 @@ document.getElementById('set_name').value  = userName;
 document.getElementById('set_email').value = userEmail;
 document.getElementById('set_phone').value = userPhone;
 document.getElementById('set_state').value = userState;
+document.addEventListener('DOMContentLoaded', function(){
+  var stateSelect = document.getElementById('set_state');
+  if (stateSelect) stateSelect.value = userState;
+});
 
 //   REPORT DATA  
 var ALL_REPORTS = ecoAllReports();
@@ -636,11 +663,20 @@ ACTIVITIES.forEach(function(a, i, arr){
 //   TABS  
 var TABS = ['reports','updates','activity','settings','notifications'];
 function showTab(name) {
-  TABS.forEach(function(t){
-    document.getElementById('page-'+t).classList.toggle('off', t!==name);
+  ['reports','updates','activity','settings','notifications'].forEach(function(t){
+    var page = document.getElementById('page-'+t);
+    if (page) page.classList.toggle('off', t!==name);
     var tab = document.getElementById('tab-'+t);
     if (tab) tab.classList.toggle('active', t===name);
   });
+}
+function editProfile() {
+  showTab('settings');
+  var settings = document.getElementById('page-settings');
+  if (settings) {
+    settings.style.scrollMarginTop = '84px';
+    settings.scrollIntoView({behavior:'smooth', block:'start'});
+  }
 }
 
 //   REPORT DETAIL MODAL  
@@ -744,7 +780,6 @@ function openDetail(id) {
 
   document.getElementById('dm_body').innerHTML = bodyHtml;
   renderReviews(r.id);
-  try { renderMedia(r.id, 'before'); } catch(e) {}
   document.getElementById('detailModal').classList.remove('off');
 }
 function dRow(label, val) {
@@ -757,10 +792,17 @@ function closeDetail() { document.getElementById('detailModal').classList.add('o
 
 // Reviews storage + rendering
 function getAllReviews() {
-  try { return JSON.parse(localStorage.getItem('eco_reviews') || '{}'); } catch (e) { return {}; }
+  try {
+    var reviews = JSON.parse(localStorage.getItem('eco_reviews') || '{}');
+    if (!reviews || typeof reviews !== 'object' || Array.isArray(reviews)) return {};
+    Object.keys(reviews).forEach(function(id){
+      if (!Array.isArray(reviews[id])) delete reviews[id];
+    });
+    return reviews;
+  } catch (e) { return {}; }
 }
 function getReviews(reportId) {
-  var all = getAllReviews(); return all[reportId] || [];
+  var all = getAllReviews(); return Array.isArray(all[reportId]) ? all[reportId] : [];
 }
 function renderReviews(reportId) {
   var list = getReviews(reportId);
@@ -793,49 +835,7 @@ function submitReview(reportId) {
   document.getElementById('dm_review_comment').value = '';
   document.getElementById('dm_review_rating').value = '5';
   renderReviews(reportId);
-  try { renderMedia(reportId, 'before'); } catch(e) {}
-  showSuccess('✅','Thanks!','Your review has been added.');
-}
-
-// Media renderer for before/after or generic galleries
-function renderMedia(reportId, kind) {
-  var r = ALL_REPORTS.find(function(x){return x.id===reportId;}) || REPORTS.find(function(x){return x.id===reportId;});
-  if (!r) return;
-  var mediaObjs = r._mediaObjs || (r.media ? r.media.map(function(m){ return (typeof m === 'string') ? {url:m, kind:'generic'} : m; }) : []);
-  var slider = document.getElementById('dm_media_slider_input');
-  var wrapper = document.getElementById('dm_after_wrap');
-  var label = document.getElementById('dm_media_slider_value');
-  if (wrapper && slider && label) {
-    var value = 50;
-    if (kind === 'before') value = 30;
-    if (kind === 'after') value = 70;
-    slider.value = value;
-    wrapper.style.width = value + '%';
-    label.textContent = value + '%';
-    return;
-  }
-  var container = document.getElementById('dm_media_container');
-  if (!container) return;
-  var beforeBtn = document.getElementById('dm_media_before_btn');
-  var afterBtn  = document.getElementById('dm_media_after_btn');
-  if (beforeBtn) beforeBtn.classList.toggle('active', kind === 'before');
-  if (afterBtn)  afterBtn.classList.toggle('active', kind === 'after');
-  var filtered = (kind && kind !== 'generic') ? mediaObjs.filter(function(m){ return (m.kind||'generic') === kind; }) : mediaObjs;
-  if (!filtered.length) {
-    container.innerHTML = '<p class="text-white/35 p-2">No ' + (kind||'media') + ' available.</p>';
-    return;
-  }
-  var html = '';
-  filtered.forEach(function(m){
-    var url = m.url || m;
-    if (/\.(mp4|webm)$/i.test(url) || (m.type && (m.type.indexOf('video')===0))) {
-      html += '<video controls class="max-w-[320px] rounded-lg border border-white/10"><source src="'+url+'" type="video/mp4">Your browser does not support video.</video>';
-    } else {
-      var cap = (m.caption||'').replace(/'/g,'\\\'');
-      html += '<img src="'+url+'" alt="media" onclick="openFullscreenMedia(\''+url+'\', \''+cap+'\')" class="max-w-[320px] rounded-lg border border-white/10 cursor-pointer"/>';
-    }
-  });
-  container.innerHTML = html;
+  showSuccess('✓', 'Review submitted', 'Your review has been added to this report.');
 }
 
 function updateMediaSlider(input) {
@@ -954,6 +954,44 @@ function closeFullscreen() {
   m.classList.add('off');
 }
 ecoApplySharedUI();
+</script>
+<script>
+// Mobile nav toggle (profile)
+(function(){
+  function activateProfileTab(name) {
+    ['reports','updates','activity','settings','notifications'].forEach(function(tabName){
+      var page = document.getElementById('page-' + tabName);
+      if (page) page.classList.toggle('off', tabName !== name);
+      var tab = document.getElementById('tab-' + tabName);
+      if (tab) {
+        tab.setAttribute('aria-selected', String(tabName === name));
+        tab.style.backgroundColor = tabName === name ? 'rgba(255,255,255,0.15)' : 'transparent';
+        tab.style.color = tabName === name ? '#fff' : 'rgba(255,255,255,0.5)';
+      }
+    });
+  }
+  ['reports','updates','activity','settings'].forEach(function(name){
+    var tab = document.getElementById('tab-' + name);
+    if (tab) tab.addEventListener('click', function(){ activateProfileTab(name); });
+  });
+  var notificationsButton = document.getElementById('tab-notifications');
+  if (notificationsButton) notificationsButton.addEventListener('click', function(){ activateProfileTab('notifications'); });
+  var editButton = document.getElementById('editProfileButton');
+  if (editButton) editButton.addEventListener('click', function(){
+    activateProfileTab('settings');
+    var settings = document.getElementById('page-settings');
+    if (settings) {
+      settings.style.scrollMarginTop = '84px';
+      settings.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+  var t=document.getElementById('navToggle');
+  var m=document.getElementById('mobileNav');
+  if(!t||!m) return;
+  t.addEventListener('click',function(){ m.classList.toggle('hidden'); t.setAttribute('aria-expanded', String(!m.classList.contains('hidden'))); });
+  m.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ m.classList.add('hidden'); t.setAttribute('aria-expanded','false'); }); });
+  window.addEventListener('scroll',function(){ if(!m.classList.contains('hidden')) m.classList.add('hidden'); });
+})();
 </script>
 </body>
 </html>

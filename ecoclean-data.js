@@ -25,7 +25,10 @@ var ECO_SAMPLE_REPORTS = [
 function ecoReadReports() {
   try {
     var raw = localStorage.getItem(ECO_REPORT_KEY);
-    return raw ? JSON.parse(raw) : [];
+    var parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.filter(function(report) {
+      return report && typeof report === 'object' && typeof report.id === 'string' && report.id.trim();
+    }) : [];
   } catch (e) {
     return [];
   }
